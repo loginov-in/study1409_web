@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Вход в панель STUDY1409: расписание занятий, дедлайны и зачёты.">
+<title>STUDY1409 — Вход в панель</title>
+<script>document.documentElement.classList.add('js')</script>
+<style>
+  :root {
+    --surface-base: #000000;
+    --surface-raised: #121216;
+    --surface-field: #0e0e12;
+    --surface-raised-alt: #191c1f;
+    --line: #23242a;
+    --line-strong: #34363e;
+
+    --text-primary: #ffffff;
+    --text-body: #e6e7ec;
+    --text-muted: #a2a4ae;
+    --text-faint: #8a8c96;
+    --text-accent: #6fa0ff;
+
+    --accent: #4446e1;
+    --accent-hover: #5658f0;
+    --accent-active: #383ad0;
+    --accent-soft: rgba(68, 70, 225, 0.14);
+    --focus: #8fa9ff;
+    --focus-ring: rgba(143, 169, 255, 0.42);
+
+    --danger: #ff6b6b;
+    --danger-soft: rgba(255, 107, 107, 0.12);
+
+    --font: "Inter", -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+    --text-xs: 12.75px;
+    --text-sm: 13.5px;
+    --text-md: 15px;
+    --text-lg: 19px;
+    --text-display: 40px;
+
+    --space-1: 4px;
+    --space-2: 6px;
+    --space-3: 10px;
+    --space-4: 14px;
+    --space-5: 20px;
+    --space-6: 36px;
+
+    --radius-field: 10px;
+    --radius-card: 20px;
+    --radius-pill: 9999px;
+
+    --shadow-glow: 0 2px 12px 0 rgba(68, 70, 225, 0.3);
+    --shadow-lift: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
+
+    --motion-instant: 200ms;
+    --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--surface-base);
+    color: var(--text-body);
+    font-family: var(--font);
+    font-size: var(--text-md);
+    line-height: 1.5;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a { color: var(--text-accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  :where(a, button, input, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  :where(a, button):focus-visible { border-radius: 6px; }
+
+  .auth {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(480px, 44%);
+    width: 100%;
+    max-width: 1760px;
+    margin-inline: auto;
+    border-inline: 1px solid var(--line);
+  }
+
+  .auth__aside {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--space-6);
+    padding: clamp(28px, 3.2vw, 64px);
+    border-right: 1px solid var(--line);
+    background:
+      radial-gradient(120% 80% at 8% 0%, rgba(68, 70, 225, 0.22), transparent 62%),
+      radial-gradient(90% 60% at 100% 100%, rgba(111, 160, 255, 0.08), transparent 70%),
+      var(--surface-base);
+  }
+
+  .auth__aside::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(120% 90% at 20% 10%, #000 20%, transparent 78%);
+    mask-image: radial-gradient(120% 90% at 20% 10%, #000 20%, transparent 78%);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text-primary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .brand:hover { text-decoration: none; }
+
+  .brand__mark {
+    width: 30px;
+    height: 30px;
+    flex: none;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(150deg, var(--accent), #2b2d9c);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .brand__mark svg { width: 16px; height: 16px; }
+
+  .aside__lead {
+    max-width: 20ch;
+    margin: 0;
+    color: var(--text-primary);
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: 600;
+    line-height: 1.14;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .aside__note {
+    max-width: 46ch;
+    margin: var(--space-4) 0 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .session {
+    width: min(100%, 420px);
+    padding: var(--space-5);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: linear-gradient(180deg, rgba(25, 28, 31, 0.86), rgba(10, 10, 14, 0.86));
+    box-shadow: var(--shadow-lift);
+    backdrop-filter: blur(6px);
+  }
+
+  .session__label {
+    margin: 0 0 var(--space-2);
+    color: var(--text-faint);
+    font-size: var(--text-xs);
+    letter-spacing: 0.02em;
+  }
+
+  .session__clock {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: var(--text-display);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .session__title {
+    margin: var(--space-4) 0 0;
+    color: var(--text-body);
+    font-size: var(--text-lg);
+    font-weight: 500;
+  }
+
+  .session__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .session__meta span {
+    padding: 2px 10px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-pill);
+  }
+
+  .aside__foot {
+    margin: 0;
+    color: var(--text-faint);
+    font-size: var(--text-xs);
+  }
+
+  .auth__panel {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(28px, 3.4vw, 72px);
+    background: var(--surface-base);
+  }
+
+  .auth__inner {
+    width: min(100%, 420px);
+    margin-block: auto;
+    margin-inline: auto;
+  }
+
+  .auth__mobileBrand { display: none; }
+
+  .title {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin: var(--space-2) 0 0;
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .form {
+    margin: var(--space-6) 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .field { display: flex; flex-direction: column; gap: var(--space-2); }
+
+  .field__label {
+    color: var(--text-body);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .control {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-field);
+    background: var(--surface-field);
+    transition: border-color var(--motion-instant) var(--ease), box-shadow var(--motion-instant) var(--ease);
+  }
+
+  .control:hover { border-color: #45474f; }
+
+  .control:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+
+  .control__input {
+    width: 100%;
+    min-height: 48px;
+    padding: var(--space-3) var(--space-4);
+    border: 0;
+    border-radius: inherit;
+    background: transparent;
+    color: var(--text-primary);
+    font: inherit;
+    font-size: var(--text-md);
+  }
+
+  .control__input::placeholder { color: #85878f; }
+
+  .control__input:focus { outline: none; }
+
+  .control__input:-webkit-autofill {
+    -webkit-text-fill-color: var(--text-primary);
+    -webkit-box-shadow: 0 0 0 1000px var(--surface-field) inset;
+    caret-color: var(--text-primary);
+  }
+
+  .control__input:disabled {
+    color: var(--text-faint);
+    cursor: not-allowed;
+  }
+
+  .control--invalid {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px var(--danger-soft);
+  }
+
+  .control--disabled { opacity: 0.55; }
+
+  .reveal {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: var(--space-1);
+    border: 0;
+    border-radius: var(--radius-field);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color var(--motion-instant) var(--ease), background-color var(--motion-instant) var(--ease);
+  }
+
+  .reveal:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.06); }
+  .reveal svg { width: 20px; height: 20px; }
+
+  .field__error {
+    display: none;
+    margin: 0;
+    color: var(--danger);
+    font-size: var(--text-xs);
+  }
+
+  .field__error[data-visible="true"] { display: block; }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
+  }
+
+  .check {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    color: var(--text-body);
+    font-size: var(--text-sm);
+    cursor: pointer;
+  }
+
+  .check input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .row__link { font-size: var(--text-sm); }
+
+  .alert {
+    display: none;
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid rgba(255, 107, 107, 0.4);
+    border-radius: var(--radius-field);
+    background: var(--danger-soft);
+    color: #ffb3b3;
+    font-size: var(--text-sm);
+  }
+
+  .alert[data-visible="true"] { display: block; }
+
+  .submit {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 50px;
+    padding: var(--space-3) var(--space-5);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: #ffffff;
+    font: inherit;
+    font-size: var(--text-md);
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: var(--shadow-glow);
+    transition: background-color var(--motion-instant) var(--ease), transform var(--motion-instant) var(--ease);
+  }
+
+  .submit:hover { background: var(--accent-hover); }
+  .submit:active { background: var(--accent-active); transform: translateY(1px); }
+  .submit:disabled { cursor: not-allowed; box-shadow: none; opacity: 0.7; }
+
+  .submit__arrow { transition: transform var(--motion-instant) var(--ease); }
+  .submit:hover .submit__arrow { transform: translateX(3px); }
+
+  .submit__spinner { display: none; width: 18px; height: 18px; }
+
+  .submit[data-loading="true"] .submit__spinner {
+    display: block;
+    animation: spin 700ms linear infinite;
+  }
+
+  .submit[data-loading="true"] { pointer-events: none; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--text-faint);
+    font-size: var(--text-xs);
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .sso {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: 50px;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    background: var(--surface-raised-alt);
+    color: var(--text-primary);
+    font: inherit;
+    font-size: var(--text-md);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color var(--motion-instant) var(--ease), border-color var(--motion-instant) var(--ease);
+  }
+
+  .sso:hover { background: #22262b; border-color: #4a4d55; }
+  .sso:active { background: #1c1f23; }
+  .sso:disabled { cursor: not-allowed; opacity: 0.6; }
+  .sso svg { width: 18px; height: 18px; color: var(--text-accent); }
+
+  .auth__legal {
+    margin: var(--space-5) 0 0;
+    color: var(--text-faint);
+    font-size: var(--text-xs);
+  }
+
+  .js .reveal-on-load { opacity: 0; transform: translateY(10px); }
+
+  .is-ready .reveal-on-load {
+    animation: rise 420ms var(--ease) both;
+  }
+
+  .is-ready .reveal-on-load:nth-child(1) { animation-delay: 40ms; }
+  .is-ready .reveal-on-load:nth-child(2) { animation-delay: 110ms; }
+  .is-ready .reveal-on-load:nth-child(3) { animation-delay: 180ms; }
+  .is-ready .reveal-on-load:nth-child(4) { animation-delay: 250ms; }
+  .is-ready .reveal-on-load:nth-child(5) { animation-delay: 320ms; }
+  .is-ready .reveal-on-load:nth-child(6) { animation-delay: 390ms; }
+
+  @keyframes rise {
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (min-width: 901px) {
+    .aside__lead {
+      font-size: clamp(30px, 2.5vw, 40px);
+      max-width: 17ch;
+    }
+
+    .session { width: min(100%, 460px); }
+
+    .control__input { min-height: 50px; }
+
+    .submit,
+    .sso { min-height: 52px; }
+  }
+
+  @media (min-width: 1600px) {
+    :root {
+      --text-md: 16px;
+      --text-lg: 20px;
+      --text-display: 52px;
+    }
+
+    .auth { grid-template-columns: minmax(0, 1fr) minmax(560px, 40%); }
+
+    .auth__inner { width: min(100%, 440px); }
+
+    .aside__lead { font-size: 46px; }
+
+    .aside__note { font-size: var(--text-md); }
+
+    .title { font-size: 30px; }
+  }
+
+  @media (min-width: 1920px) {
+    :root {
+      --space-6: 40px;
+      --space-5: 24px;
+    }
+
+    .auth { max-width: 1920px; }
+
+    .control__input { min-height: 54px; }
+
+    .form { gap: var(--space-5); }
+  }
+
+  @media (min-width: 901px) and (max-height: 860px) {
+    .auth__aside { gap: var(--space-5); padding-block: clamp(24px, 2.4vw, 40px); }
+
+    .aside__lead { font-size: clamp(26px, 2.2vw, 34px); }
+
+    .aside__note { margin-top: var(--space-2); }
+
+    .session { padding: var(--space-4); }
+
+    .form { margin-top: var(--space-5); gap: var(--space-3); }
+
+    .control__input { min-height: 46px; }
+
+    .submit,
+    .sso { min-height: 48px; }
+  }
+
+  @media (max-width: 900px) {
+    .auth {
+      grid-template-columns: 1fr;
+      border-inline: 0;
+    }
+
+    .auth__aside { display: none; }
+
+    .auth__panel { padding: var(--space-6) var(--space-5); min-height: 100vh; }
+
+    .auth__mobileBrand {
+      display: inline-flex;
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .title { font-size: 23px; }
+    .row { justify-content: flex-start; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .session { transition: border-color var(--motion-instant) var(--ease); }
+    .session:hover { border-color: var(--line-strong); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 1ms !important;
+    }
+    .js .reveal-on-load { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+<main class="auth">
+  <aside class="auth__aside">
+    <a class="brand" href="/">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19V9l8-5 8 5v10"></path>
+          <path d="M9 19v-6h6v6"></path>
+        </svg>
+      </span>
+      STUDY1409
+    </a>
+
+    <div>
+      <p class="aside__lead">Расписание, дедлайны и зачёты в одном окне.</p>
+      <p class="aside__note">Панель собирает всё по вашей группе: ближайшие пары, сданные работы и текущий рейтинг.</p>
+    </div>
+
+    <div class="session">
+      <p class="session__label">До начала ближайшей пары</p>
+      <p class="session__clock" id="session-clock" aria-live="off">00:47:12</p>
+      <p class="session__title">Анализ данных</p>
+      <ul class="session__meta">
+        <li>Аудитория 4.12</li>
+        <li>14:09</li>
+        <li>Группа 1409</li>
+      </ul>
+    </div>
+
+    <p class="aside__foot">Учебный портал кафедры</p>
+  </aside>
+
+  <section class="auth__panel">
+    <div class="auth__inner">
+      <a class="brand auth__mobileBrand" href="/">
+        <span class="brand__mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V9l8-5 8 5v10"></path>
+            <path d="M9 19v-6h6v6"></path>
+          </svg>
+        </span>
+        STUDY1409
+      </a>
+
+      <h1 class="title">Вход в панель</h1>
+      <p class="subtitle">Введите свои данные для входа в WEB-Приложение</p>
+
+      <form class="form" id="login-form" method="post" action="#" novalidate>
+        <p class="alert" id="form-alert" role="alert" data-visible="false">
+          Не удалось войти. Проверьте почту и пароль и попробуйте ещё раз.
+        </p>
+
+        <div class="field reveal-on-load">
+          <label class="field__label" for="email">Учебная почта</label>
+          <div class="control" id="email-control">
+            <input class="control__input" id="email" name="email" type="email"
+                   placeholder="ivanov@study1409.ru" autocomplete="username"
+                   inputmode="email" spellcheck="false"
+                   aria-describedby="email-error" required>
+          </div>
+          <p class="field__error" id="email-error" data-visible="false">Введите почту в формате ivanov@study1409.ru</p>
+        </div>
+
+        <div class="field reveal-on-load">
+          <label class="field__label" for="password">Пароль</label>
+          <div class="control" id="password-control">
+            <input class="control__input" id="password" name="password" type="password"
+                   placeholder="Не меньше 8 символов" autocomplete="current-password"
+                   aria-describedby="password-error" required>
+            <button class="reveal" id="reveal-toggle" type="button"
+                    aria-pressed="false" aria-controls="password" aria-label="Показать пароль">
+              <svg id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+          <p class="field__error" id="password-error" data-visible="false">Введите пароль</p>
+        </div>
+
+        <div class="row reveal-on-load">
+          <label class="check" for="remember">
+            <input id="remember" name="remember" type="checkbox" value="1">
+            Не выходить из аккаунта
+          </label>
+          <a class="row__link" href="#">Восстановить пароль</a>
+        </div>
+
+        <button class="submit reveal-on-load" id="submit" type="submit" data-loading="false">
+          <svg class="submit__spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 3a9 9 0 1 0 9 9" opacity="0.9"></path>
+          </svg>
+          <span id="submit-label">Войти</span>
+          <svg class="submit__arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h13"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </button>
+
+        <p class="divider reveal-on-load">или войти другим способом</p>
+
+        <button class="sso reveal-on-load" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3 5 6v5c0 4.4 3 8.3 7 9.5 4-1.2 7-5.1 7-9.5V6l-7-3Z"></path>
+            <path d="M9.5 12.2 11.4 14l3.6-3.7"></path>
+          </svg>
+          Единый вход университета
+        </button>
+      </form>
+
+      <p class="auth__legal">Продолжая, вы соглашаетесь с правилами обработки персональных данных.</p>
+    </div>
+  </section>
+</main>
+
+<script>
+  const form = document.getElementById('login-form');
+  const email = document.getElementById('email');
+  const password = document.getElementById('password');
+  const emailControl = document.getElementById('email-control');
+  const passwordControl = document.getElementById('password-control');
+  const emailError = document.getElementById('email-error');
+  const passwordError = document.getElementById('password-error');
+  const alertBox = document.getElementById('form-alert');
+  const submit = document.getElementById('submit');
+  const submitLabel = document.getElementById('submit-label');
+  const revealToggle = document.getElementById('reveal-toggle');
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  const showError = (input, control, message, state) => {
+    const visible = !state;
+    control.classList.toggle('control--invalid', visible);
+    message.dataset.visible = String(visible);
+    input.setAttribute('aria-invalid', String(visible));
+  };
+
+  [email, password].forEach(input => {
+    input.addEventListener('input', () => {
+      if (input.getAttribute('aria-invalid') === 'true') {
+        showError(input,
+          input === email ? emailControl : passwordControl,
+          input === email ? emailError : passwordError,
+          true);
+      }
+      alertBox.dataset.visible = 'false';
+    });
+  });
+
+  revealToggle.addEventListener('click', () => {
+    const revealed = password.type === 'text';
+    password.type = revealed ? 'password' : 'text';
+    revealToggle.setAttribute('aria-pressed', String(!revealed));
+    revealToggle.setAttribute('aria-label', revealed ? 'Показать пароль' : 'Скрыть пароль');
+    password.focus({ preventScroll: true });
+  });
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const emailOk = emailPattern.test(email.value.trim());
+    const passwordOk = password.value.length > 0;
+
+    showError(email, emailControl, emailError, emailOk);
+    showError(password, passwordControl, passwordError, passwordOk);
+
+    if (!emailOk || !passwordOk) {
+      (emailOk ? password : email).focus();
+      return;
+    }
+
+    submit.dataset.loading = 'true';
+    submit.setAttribute('aria-busy', 'true');
+    submit.disabled = true;
+    submitLabel.textContent = 'Проверяем данные';
+    email.disabled = true;
+    password.disabled = true;
+  });
+
+  const clock = document.getElementById('session-clock');
+  if (clock) {
+    const target = Date.now() + (47 * 60 + 12) * 1000;
+    const pad = value => String(value).padStart(2, '0');
+    const tick = () => {
+      const left = Math.max(0, target - Date.now());
+      const hours = Math.floor(left / 3600000);
+      const minutes = Math.floor(left % 3600000 / 60000);
+      const seconds = Math.floor(left % 60000 / 1000);
+      clock.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+
+  requestAnimationFrame(() => document.body.classList.add('is-ready'));
+</script>
+</body>
+</html>
