@@ -8,3 +8,7 @@ from flask import  Flask, render_template, redirect, request, send_file, redirec
 @app.route("/")
 def login():
     return render_template("login.html")
+
+@app.route("/help")
+def help_page():
+    return render_template("help.html")

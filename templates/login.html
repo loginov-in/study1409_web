@@ -18,6 +18,7 @@
       --bg-secondary: rgba(255, 255, 255, 0.08);
       --bg-tertiary: rgba(255, 255, 255, 0.06);
       --bg-hover: rgba(255, 255, 255, 0.12);
+      --bg-autofill: #131317;
       --text-primary: #ffffff;
       --text-secondary: rgba(255, 255, 255, 0.78);
       --text-muted: rgba(255, 255, 255, 0.62);
@@ -25,6 +26,7 @@
       --border-light: rgba(255, 255, 255, 0.15);
       --accent: #4446E1;
       --accent-deep: #2E3192;
+      --accent-gradient: linear-gradient(135deg, var(--accent) 0%, var(--accent-deep) 100%);
       --danger: #ff6b6b;
       --cloud-1: rgba(68, 70, 225, 0.4);
       --cloud-2: rgba(220, 53, 69, 0.35);
@@ -33,9 +35,18 @@
       --shadow-color: rgba(0, 0, 0, 0.3);
       --focus: #a9b0ff;
       --font: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --space-1: 6px;
+      --space-2: 12px;
+      --space-3: 16px;
+      --space-4: 32px;
+      --radius-xs: 10px;
       --radius-field: 14px;
       --radius-card: 28px;
-      --radius-item: 18px;
+      --dur-fast: 150ms;
+      --dur-normal: 200ms;
+      --dur-slow: 250ms;
+      --ring-focus: 0 0 0 4px rgba(68, 70, 225, 0.35);
+      --ring-danger: 0 0 0 4px rgba(255, 107, 107, 0.28);
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -134,7 +145,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
+      gap: var(--space-2);
       margin-bottom: clamp(20px, 2.4vw, 32px);
       text-align: center;
     }
@@ -200,15 +211,15 @@
     .login-form {
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: var(--space-3);
     }
 
-    .field { position: relative; display: flex; flex-direction: column; gap: 6px; }
+    .field { position: relative; display: flex; flex-direction: column; gap: var(--space-1); }
 
     input[type="text"],
     input[type="password"] {
       width: 100%;
-      padding: 16px;
+      padding: var(--space-3);
       padding-right: 52px;
       background: var(--bg-secondary);
       border: 1px solid var(--border-light);
@@ -217,30 +228,41 @@
       font: inherit;
       font-size: 1rem;
       font-weight: 500;
-      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+      transition: background var(--dur-slow) ease, border-color var(--dur-slow) ease, box-shadow var(--dur-slow) ease, opacity var(--dur-normal) ease;
     }
 
-    #login { padding-right: 16px; }
+    #login { padding-right: var(--space-3); }
 
     input::placeholder { color: var(--text-muted); }
 
-    input:hover { background: rgba(255, 255, 255, 0.1); }
+    input:hover:not(:disabled):not(:read-only) { background: var(--bg-hover); }
 
     input:focus {
       outline: none;
       background: var(--bg-hover);
       border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(68, 70, 225, 0.22);
+      box-shadow: var(--ring-focus);
+    }
+
+    input:focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    input:disabled,
+    input:read-only:not([type="checkbox"]) {
+      opacity: 0.6;
+      cursor: default;
     }
 
     input[aria-invalid="true"] {
       border-color: var(--danger);
-      box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.18);
+      box-shadow: var(--ring-danger);
     }
 
     input:-webkit-autofill {
       -webkit-text-fill-color: var(--text-primary);
-      -webkit-box-shadow: 0 0 0 1000px #131317 inset;
+      -webkit-box-shadow: 0 0 0 1000px var(--bg-autofill) inset;
     }
 
     .field__error {
@@ -251,29 +273,31 @@
 
     .reveal-btn {
       position: absolute;
-      right: 6px;
-      bottom: 22px;
+      right: var(--space-1);
+      top: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
       width: 40px;
       height: 40px;
       border: 0;
-      border-radius: 10px;
+      border-radius: var(--radius-xs);
       background: none;
       color: var(--text-muted);
       cursor: pointer;
-      transition: color 0.2s ease, background 0.2s ease;
+      transition: color var(--dur-fast) ease, background var(--dur-fast) ease, opacity var(--dur-normal) ease;
     }
 
     .reveal-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+    .reveal-btn:active { background: var(--bg-secondary); }
+    .reveal-btn:disabled { opacity: 0.5; cursor: default; background: none; color: var(--text-muted); }
     .reveal-btn svg { width: 20px; height: 20px; }
 
     .form-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: var(--space-2);
       font-size: 0.82rem;
       font-weight: 600;
     }
@@ -281,7 +305,7 @@
     .check {
       display: inline-flex;
       align-items: center;
-      gap: 9px;
+      gap: var(--space-1);
       color: var(--text-secondary);
       cursor: pointer;
     }
@@ -294,39 +318,42 @@
       cursor: pointer;
     }
 
+    .check input:disabled { cursor: default; }
+
     .form-row a {
       color: var(--text-secondary);
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color var(--dur-fast) ease;
     }
 
     .form-row a:hover { color: var(--text-primary); text-decoration: underline; }
+    .form-row a:active { color: var(--text-primary); }
 
     .submit-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: var(--space-2);
       width: 100%;
-      margin-top: 6px;
-      padding: 16px;
+      margin-top: var(--space-1);
+      padding: var(--space-3);
       border: 0;
       border-radius: var(--radius-field);
-      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
-      color: #ffffff;
+      background: var(--accent-gradient);
+      color: var(--text-primary);
       font: inherit;
       font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+      transition: transform var(--dur-normal) ease, box-shadow var(--dur-normal) ease, opacity var(--dur-normal) ease;
     }
 
-    .submit-btn:hover {
+    .submit-btn:hover:not(:disabled) {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px rgba(68, 70, 225, 0.4);
     }
 
-    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:active:not(:disabled) { transform: translateY(0); box-shadow: none; }
 
     .submit-btn:disabled,
     .submit-btn[aria-busy="true"] {
@@ -341,7 +368,7 @@
       width: 18px;
       height: 18px;
       border: 2px solid rgba(255, 255, 255, 0.35);
-      border-top-color: #ffffff;
+      border-top-color: var(--text-primary);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
@@ -357,6 +384,7 @@
       font-weight: 600;
       text-align: center;
       color: var(--danger);
+      overflow-wrap: anywhere;
     }
 
     .support-link {
@@ -367,15 +395,16 @@
       text-align: center;
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.2s ease;
+      transition: color var(--dur-fast) ease;
     }
 
     .support-link:hover { color: var(--text-primary); }
+    .support-link:active { color: var(--text-secondary); }
 
     .registration-btn {
       display: block;
       margin: 10px auto 0;
-      padding: 6px 2px;
+      padding: var(--space-1) 2px;
       border: 0;
       background: none;
       font: inherit;
@@ -383,140 +412,20 @@
       font-weight: 600;
       color: var(--text-muted);
       cursor: pointer;
-      transition: color 0.2s ease;
+      transition: color var(--dur-fast) ease;
     }
 
     .registration-btn:hover { color: var(--text-secondary); }
-
-    .fastid-ad {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      margin-top: 1.5rem;
-      padding: 16px 18px;
-      background: var(--bg-tertiary);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      box-shadow: 0 12px 30px var(--shadow-color);
-    }
-
-    .fastid-ad__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      flex-shrink: 0;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
-      color: #ffffff;
-    }
-
-    .fastid-ad__icon svg { width: 22px; height: 22px; }
-
-    .fastid-ad__text {
-      min-width: 0;
-      font-size: 0.82rem;
-      font-weight: 500;
-      line-height: 1.45;
-      color: var(--text-secondary);
-    }
-
-    .fastid-ad__text strong {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.78rem;
-      letter-spacing: 0.06em;
-      color: var(--text-primary);
-    }
-
-    .side-col { width: 100%; max-width: 560px; }
-
-    .services__head {
-      margin-bottom: 16px;
-    }
-
-    .services__title {
-      font-size: 1.05rem;
-      font-weight: 800;
-      letter-spacing: -0.2px;
-      text-align: center;
-    }
-
-    .services__note {
-      margin-top: 4px;
-      font-size: 0.82rem;
-      font-weight: 500;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .service-item {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 18px 16px;
-      background: var(--bg-tertiary);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-item);
-      box-shadow: 0 12px 30px var(--shadow-color);
-      text-decoration: none;
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-
-    .service-item:hover {
-      transform: translateY(-3px);
-      background: var(--bg-hover);
-      border-color: rgba(68, 70, 225, 0.55);
-      text-decoration: none;
-    }
-
-    .service-item__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      color: var(--accent);
-    }
-
-    .service-item__icon svg { width: 22px; height: 22px; }
-
-    .service-item__label {
-      font-size: 0.85rem;
-      font-weight: 700;
-      line-height: 1.3;
-      color: var(--text-primary);
-    }
-
-    .service-item__hint {
-      font-size: 0.76rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      overflow-wrap: anywhere;
-    }
+    .registration-btn:active { color: var(--text-primary); }
+    .registration-btn:disabled { opacity: 0.5; cursor: default; }
 
     .footer-dit {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: var(--space-2);
       margin-top: clamp(28px, 3.4vw, 48px);
       text-align: center;
-      opacity: 0.75;
     }
 
     .footer-dit img { height: 30px; }
@@ -529,7 +438,6 @@
 
     .js .brand-header,
     .js .login-col,
-    .js .side-col,
     .js .footer-dit {
       opacity: 0;
       transform: translateY(16px);
@@ -537,7 +445,6 @@
 
     .js.is-ready .brand-header { animation: fadeInUp 0.55s ease-out 0.05s both; }
     .js.is-ready .login-col { animation: fadeInUp 0.55s ease-out 0.15s both; }
-    .js.is-ready .side-col { animation: fadeInUp 0.55s ease-out 0.28s both; }
     .js.is-ready .footer-dit { animation: fadeInUp 0.55s ease-out 0.38s both; }
 
     @keyframes fadeInUp {
@@ -548,28 +455,12 @@
     @media (min-width: 1080px) {
       .page { padding-inline: 40px; }
 
-      .layout {
-        grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
-        align-items: start;
-        gap: 40px;
-      }
-
-      .login-col {
-        position: sticky;
-        top: clamp(24px, 3vw, 48px);
-        max-width: none;
-      }
-
       .login-card { padding: 34px; }
 
       .brand-header img { height: 72px; }
     }
 
     @media (min-width: 1400px) {
-      .page { max-width: 1280px; }
-
-      .layout { grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: 56px; }
-
       .login-card { padding: 38px; }
 
       .brand-header img { height: 84px; }
@@ -580,19 +471,15 @@
       .brand-header img { height: 52px; }
       .brand-header p { display: none; }
       .login-card { padding: 26px 30px; }
-      .services-grid { gap: 10px; }
-      .service-item { padding: 14px; }
       .footer-dit { margin-top: 28px; }
     }
 
     @media (max-width: 640px) {
       .login-card { padding: 24px 20px; }
       .login-title { font-size: 1.2rem; }
-      .fastid-ad { padding: 14px; }
     }
 
     @media (max-width: 360px) {
-      .services-grid { grid-template-columns: 1fr; }
       .form-row { flex-wrap: wrap; }
     }
 
@@ -622,7 +509,7 @@
           <form class="login-form" id="login-form" method="post" action="#" novalidate>
             <div class="field">
               <label class="sr-only" for="login">Логин</label>
-              <input type="text" id="login" name="login" placeholder="Логин"
+              <input type="text" id="login" name="login" placeholder="Введите свою почту"
                      autocomplete="username" autocapitalize="off" spellcheck="false"
                      aria-describedby="login-error" required>
               <span class="field__error" id="login-error" role="alert" hidden></span>
@@ -654,6 +541,8 @@
               <span>Войти</span>
               <span class="submit-btn__spinner" aria-hidden="true"></span>
             </button>
+
+            <p class="sr-only" id="submit-status" role="status" aria-live="polite"></p>
           </form>
 
           <p class="alert" id="form-alert" role="alert" aria-live="assertive"></p>
@@ -661,79 +550,12 @@
           <a class="support-link" href="/help">Техподдержка</a>
           <button class="registration-btn" type="button">Как зарегистрироваться?</button>
         </div>
-
-        <div class="fastid-ad">
-          <span class="fastid-ad__icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"></circle><path d="M12 12h9m-3 0v3.5M15.5 12v2.5"></path></svg>
-          </span>
-          <p class="fastid-ad__text">
-            <strong>Входите перез паролей и СМС!</strong>
-            Вы можете входить в STUDY1409 без логинов, паролей и СМС. Подключите брелок моментального входа FastID в ИТ-полигоне
-          </p>
-        </div>
       </div>
-
-      <section class="side-col" aria-labelledby="services-title">
-        <div class="services__head">
-          <h2 class="services__title" id="services-title">Сервисы школы</h2>
-          <p class="services__note">Откроются после входа</p>
-        </div>
-
-        <div class="services-grid">
-          <a class="service-item" href="/create_exit_application">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"></path><path d="M10 8 6 12l4 4M6 12h9"></path></svg>
-            </span>
-            <span class="service-item__label">Заявки на выход</span>
-            <span class="service-item__hint">Пропуск на территорию</span>
-          </a>
-
-          <a class="service-item" href="/create-lift-application">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="15" height="18" rx="2.5"></rect><path d="m10 10 2-2 2 2M14 14l-2 2-2-2"></path></svg>
-            </span>
-            <span class="service-item__label">Лифт</span>
-            <span class="service-item__hint">Вызов с этажа</span>
-          </a>
-
-          <a class="service-item" href="https://event.school1409.ru">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M8 3.5v3M16 3.5v3M3.5 10h17"></path><path d="m9.5 15 1.8 1.8 3.4-3.6"></path></svg>
-            </span>
-            <span class="service-item__label">Мероприятия</span>
-            <span class="service-item__hint">event.school1409.ru</span>
-          </a>
-
-          <a class="service-item" href="https://info.school1409.ru">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6.5v5.5c0 4.3 2.9 8.1 7 9.3 4.1-1.2 7-5 7-9.3V6.5l-7-3Z"></path><path d="M9.5 12h5M12 9.5v5"></path></svg>
-            </span>
-            <span class="service-item__label">Дума</span>
-            <span class="service-item__hint">info.school1409.ru</span>
-          </a>
-
-          <a class="service-item" href="/account">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20c1.3-3.6 4-5.4 7.5-5.4s6.2 1.8 7.5 5.4"></path></svg>
-            </span>
-            <span class="service-item__label">Аккаунт</span>
-            <span class="service-item__hint">Профиль и 1409ID</span>
-          </a>
-
-          <a class="service-item" href="https://t.me/dit1409_bot">
-            <span class="service-item__icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v-3a8 8 0 0 1 16 0v3"></path><rect x="2.5" y="13" width="4.5" height="6.5" rx="2"></rect><rect x="17" y="13" width="4.5" height="6.5" rx="2"></rect></svg>
-            </span>
-            <span class="service-item__label">Поддержка</span>
-            <span class="service-item__hint">Техподдержка в Telegram</span>
-          </a>
-        </div>
-      </section>
     </main>
 
     <footer class="footer-dit">
       <img src="/static/departament-logo.png" alt="">
-      <p class="footer-text">Создано в Школе 1409 при участии учащихся</p>
+      <p class="footer-text">Созданно в школе 1409</p>
     </footer>
   </div>
 
@@ -746,6 +568,7 @@
     const formAlert = document.getElementById('form-alert');
     const submitBtn = document.getElementById('submit-btn');
     const revealBtn = document.getElementById('reveal-btn');
+    const submitStatus = document.getElementById('submit-status');
 
     const showError = (input, node, message) => {
       node.textContent = message || '';
@@ -755,6 +578,16 @@
 
     const clearAlert = () => {
       formAlert.textContent = '';
+    };
+
+    const setBusy = busy => {
+      submitBtn.setAttribute('aria-busy', String(busy));
+      submitBtn.disabled = busy;
+      login.readOnly = busy;
+      password.readOnly = busy;
+      revealBtn.disabled = busy;
+      form.setAttribute('aria-busy', String(busy));
+      submitStatus.textContent = busy ? 'Выполняется вход…' : '';
     };
 
     revealBtn.addEventListener('click', () => {
@@ -802,10 +635,7 @@
         return;
       }
 
-      submitBtn.setAttribute('aria-busy', 'true');
-      submitBtn.disabled = true;
-      login.readOnly = true;
-      password.readOnly = true;
+      setBusy(true);
     });
 
     requestAnimationFrame(() => document.documentElement.classList.add('is-ready'));
