@@ -12,3 +12,11 @@ def login():
 @app.route("/help")
 def help_page():
     return render_template("help.html")
+
+@app.route("/apps")
+def apps_page():
+    return render_template("apps.html")
+
+@app.route("/apps-pc")
+def apps_page_pc():
+    return render_template("apps-pc.html")

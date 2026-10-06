@@ -4,3 +4,5 @@
 .claude
 .cursor
 venv
+/local_db
+test_provider.db

@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="STUDY1409 — приложение ученика: заявки на выход, обращения, формы, уведомления.">
+  <title>1409ID: Приложение</title>
+  <link rel="icon" href="/static/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    try {
+      document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    } catch (e) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  </script>
+  <style>
+    /* ============ Дизайн-шаблон MY1409 (apps3.html) ============ */
+    :root {
+      --bg-primary: #000000;
+      --bg-secondary: rgba(255, 255, 255, 0.08);
+      --bg-tertiary: rgba(255, 255, 255, 0.06);
+      --bg-hover: rgba(255, 255, 255, 0.12);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.5);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-light: rgba(255, 255, 255, 0.15);
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --cloud1-color1: rgba(68, 70, 225, 0.4);
+      --cloud1-color2: rgba(220, 53, 69, 0.35);
+      --cloud2-color1: rgba(100, 102, 255, 0.3);
+      --cloud2-color2: rgba(255, 80, 100, 0.25);
+      --card-bg: linear-gradient(135deg, rgba(28, 42, 93, 0.8) 0%, rgba(10, 17, 42, 0.8) 100%);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --accent: #4446E1;
+      --ok-color: #4ade80;
+      --bad-color: #f87171;
+      --info-color: #7dd3fc;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #f5f7fa;
+      --bg-secondary: rgba(255, 255, 255, 0.9);
+      --bg-tertiary: rgba(255, 255, 255, 0.95);
+      --bg-hover: rgba(255, 255, 255, 1);
+      --text-primary: #1a1a2e;
+      --text-secondary: rgba(26, 26, 46, 0.7);
+      --text-muted: rgba(26, 26, 46, 0.5);
+      --border-color: rgba(0, 0, 0, 0.08);
+      --border-light: rgba(0, 0, 0, 0.1);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(0, 0, 0, 0.1);
+      --cloud1-color1: rgba(68, 70, 225, 0.8);
+      --cloud1-color2: rgba(220, 53, 69, 0.75);
+      --cloud2-color1: rgba(100, 102, 255, 0.7);
+      --cloud2-color2: rgba(255, 80, 100, 0.65);
+      --card-bg: linear-gradient(135deg, rgba(68, 70, 225, 0.15) 0%, rgba(100, 102, 255, 0.08) 100%);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --ok-color: #15803d;
+      --bad-color: #be123c;
+      --info-color: #0369a1;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      position: relative;
+      transition: background 0.3s ease, color 0.3s ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(ellipse 80% 60% at 30% 20%, var(--cloud1-color1) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 70% 30%, var(--cloud1-color2) 0%, transparent 50%);
+      z-index: -1;
+      animation: cloudFloat 20s ease-in-out infinite;
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -30%;
+      left: -30%;
+      width: 160%;
+      height: 160%;
+      background:
+        radial-gradient(ellipse 50% 40% at 60% 25%, var(--cloud2-color1) 0%, transparent 45%),
+        radial-gradient(ellipse 40% 35% at 40% 35%, var(--cloud2-color2) 0%, transparent 40%);
+      z-index: -1;
+      animation: cloudFloat2 25s ease-in-out infinite reverse;
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+
+    @keyframes cloudFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(5%, 3%) scale(1.05); }
+      50% { transform: translate(-3%, 5%) scale(0.98); }
+      75% { transform: translate(-5%, -2%) scale(1.02); }
+    }
+
+    @keyframes cloudFloat2 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-4%, 4%) rotate(2deg); }
+      66% { transform: translate(4%, -3%) rotate(-2deg); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .container {
+      padding: calc(env(safe-area-inset-top, 0px) + 1.5rem) 1.5rem calc(env(safe-area-inset-bottom, 0px) + 7rem);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .greeting-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .greeting-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+      background: var(--bg-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .greeting-avatar svg {
+      width: 30px;
+      height: 30px;
+      color: var(--text-muted);
+    }
+
+    .avatar-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .greeting {
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.5s ease-out;
+    }
+
+    .greeting-container .greeting {
+      margin-bottom: 0;
+    }
+
+    .greeting-small {
+      font-size: 1rem;
+      opacity: 0.7;
+      margin-bottom: 5px;
+      color: var(--text-secondary);
+    }
+
+    .greeting-name {
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    /* iOS Liquid Glass виджеты сверху */
+    .liquid-glass-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.6s ease-out 0.1s both;
+    }
+
+    .liquid-glass {
+      flex: 1;
+      position: relative;
+      border-radius: 24px;
+      padding: 20px;
+      overflow: hidden;
+      min-height: 100px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        rgba(255, 255, 255, 0.1) 100%
+      );
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      border-radius: 24px 24px 0 0;
+      pointer-events: none;
+    }
+
+    .liquid-glass::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(
+        circle at 30% 30%,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 50%
+      );
+      pointer-events: none;
+    }
+
+    .liquid-glass.weather {
+      background: linear-gradient(
+        135deg,
+        rgba(100, 180, 255, 0.25) 0%,
+        rgba(60, 140, 220, 0.15) 50%,
+        rgba(80, 160, 240, 0.2) 100%
+      );
+    }
+
+    .liquid-glass.schedule {
+      background: linear-gradient(
+        135deg,
+        rgba(180, 130, 255, 0.2) 0%,
+        rgba(140, 100, 220, 0.1) 50%,
+        rgba(160, 115, 240, 0.15) 100%
+      );
+    }
+
+    .glass-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .glass-icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .glass-icon svg {
+      width: 44px;
+      height: 44px;
+      color: rgba(255, 255, 255, 0.9);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .glass-info {
+      flex: 1;
+      text-align: right;
+      min-width: 0;
+    }
+
+    .glass-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      line-height: 1.1;
+    }
+
+    .glass-subtitle {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 4px;
+      overflow-wrap: anywhere;
+    }
+
+    /* Сетка виджетов */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-bottom: 2rem;
+      animation: fadeInUp 0.6s ease-out 0.15s both;
+    }
+
+    .widget {
+      background: var(--bg-secondary);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      color: var(--text-primary);
+      font-family: inherit;
+      text-align: left;
+    }
+
+    .widget:hover {
+      transform: translateY(-3px);
+      background: var(--bg-hover);
+      box-shadow: 0 10px 30px rgba(68, 70, 225, 0.2);
+    }
+
+    .widget-icon-large {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .widget-icon-large svg {
+      color: white;
+      stroke: white;
+      width: 24px;
+      height: 24px;
+    }
+
+    .widget-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .widget-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .widget-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      overflow-wrap: anywhere;
+    }
+
+    /* Секции */
+    .section {
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .refresh-btn {
+      background: var(--bg-secondary);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .refresh-btn:hover {
+      background: var(--bg-hover);
+    }
+
+    .refresh-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .refresh-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Карточки заявок */
+    .cards-list {
+      background: var(--bg-tertiary);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: fadeInUp 0.6s ease-out 0.2s both;
+    }
+
+    .card-item {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      transition: background 0.3s ease;
+    }
+
+    .card-item:last-child {
+      border-bottom: none;
+    }
+
+    .card-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    button.card-item {
+      width: 100%;
+      text-align: left;
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+      background: none;
+      border: 0;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      display: block;
+    }
+
+    button.card-item:last-child {
+      border-bottom: none;
+    }
+
+    .card-item .student {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .card-item .teacher {
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .card-item .info {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .card-item .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .request-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .request-btn {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-approve {
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      color: white;
+    }
+
+    .btn-approve:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(68, 70, 225, 0.4);
+    }
+
+    .btn-reject {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn-reject:hover {
+      transform: translateY(-2px);
+      background: var(--bg-hover);
+    }
+
+    .btn-approve:disabled,
+    .btn-reject:disabled,
+    .request-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-style: italic;
+      font-size: 0.9rem;
+      line-height: 1.55;
+    }
+
+    .empty-state[hidden] {
+      display: none;
+    }
+
+    .profile-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 12px 24px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 600;
+      font-family: inherit;
+      border: 1px solid var(--border-light);
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .profile-btn:hover {
+      background: var(--bg-hover);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: calc(env(safe-area-inset-top, 0px) + 3.4rem) 1rem calc(env(safe-area-inset-bottom, 0px) + 6.5rem);
+      }
+
+      .greeting-name {
+        font-size: 1.6rem;
+      }
+
+      .liquid-glass-row {
+        flex-direction: column;
+      }
+
+      .liquid-glass {
+        min-height: 80px;
+      }
+
+      .glass-title {
+        font-size: 1.5rem;
+      }
+
+      .widgets-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .widget {
+        padding: 15px;
+      }
+
+      .widget-icon-large {
+        width: 40px;
+        height: 40px;
+      }
+
+      .widget-title {
+        font-size: 0.9rem;
+      }
+
+      .widget-subtitle {
+        font-size: 0.72rem;
+      }
+    }
+
+    /* ============ Приложение ученика (1309ID) ============ */
+
+    :where(a, button, input, select, textarea, summary):focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.is-active {
+      display: block;
+    }
+
+    /* Переключатель темы слева вверху */
+    .theme-toggle {
+      position: fixed;
+      top: max(1rem, env(safe-area-inset-top, 0px));
+      left: 1rem;
+      z-index: 1000;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 50px;
+      padding: 10px 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: inherit;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.03);
+      box-shadow: 0 5px 20px var(--shadow-color);
+      background: var(--bg-hover);
+    }
+
+    .theme-toggle svg {
+      width: 18px;
+      height: 18px;
+      color: var(--accent);
+    }
+
+    /* Шапка внутренних экранов */
+    .subbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.75rem;
+      animation: fadeInUp 0.4s ease-out;
+    }
+
+    .back-btn {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 14px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .back-btn:hover {
+      background: var(--bg-hover);
+      transform: translateX(-2px);
+    }
+
+    .back-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .subbar__title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .subbar__right {
+      margin-left: auto;
+    }
+
+    /* Нижняя навигация */
+    .tabbar {
+      position: fixed;
+      z-index: 1500;
+      bottom: max(0.8rem, env(safe-area-inset-bottom, 0px));
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 26px;
+      background: rgba(18, 18, 36, 0.6);
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      border: 1px solid var(--border-light);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    [data-theme="light"] .tabbar {
+      background: rgba(255, 255, 255, 0.75);
+    }
+
+    .tab {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      min-width: 66px;
+      padding: 8px 12px 7px;
+      border: 0;
+      border-radius: 20px;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.68rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .tab svg {
+      width: 22px;
+      height: 22px;
+      pointer-events: none;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .tab[aria-current="page"] {
+      color: var(--text-primary);
+      background: linear-gradient(135deg, rgba(68, 70, 225, 0.4), rgba(46, 49, 146, 0.28));
+    }
+
+    .tab__badge {
+      position: absolute;
+      top: 4px;
+      right: 12px;
+      min-width: 16px;
+      height: 16px;
+      padding: 0 4px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #ff6b6b, #dc3545);
+      color: #fff;
+      font-size: 0.6rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(255, 82, 82, 0.5);
+    }
+
+    .tab__badge[hidden] {
+      display: none;
+    }
+
+    /* Кнопки */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      border: 0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(68, 70, 225, 0.4);
+    }
+
+    .btn:disabled,
+    .btn[aria-busy="true"] {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      pointer-events: none;
+    }
+
+    .btn[aria-busy="true"]::after {
+      content: '';
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .btn--ghost {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-light);
+    }
+
+    .btn--ghost:hover {
+      background: var(--bg-hover);
+      box-shadow: 0 8px 22px var(--shadow-color);
+    }
+
+    .btn--block {
+      width: 100%;
+    }
+
+    .btn--sm {
+      padding: 9px 14px;
+      font-size: 0.82rem;
+      border-radius: 11px;
+    }
+
+    .btn--danger {
+      background: linear-gradient(135deg, #ff6b6b, #c82333);
+    }
+
+    .btn--danger:hover {
+      box-shadow: 0 8px 22px rgba(255, 107, 107, 0.35);
+    }
+
+    /* Формы */
+    .form {
+      display: grid;
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field__label {
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--text-primary);
+    }
+
+    .field__hint {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .field__error {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--bad-color);
+    }
+
+    .field__error[hidden] {
+      display: none;
+    }
+
+    .input,
+    .textarea,
+    select {
+      width: 100%;
+      padding: 13px 15px;
+      border-radius: 14px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      appearance: none;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+      color: var(--text-muted);
+    }
+
+    .input:focus,
+    .textarea:focus,
+    select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(68, 70, 225, 0.25);
+      outline: none;
+    }
+
+    .input[aria-invalid="true"],
+    .textarea[aria-invalid="true"] {
+      border-color: var(--bad-color);
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+    }
+
+    .textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+        linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+      background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+      background-size: 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    select option {
+      color: var(--text-primary);
+      background: var(--bg-tertiary);
+    }
+
+    input[type="date"],
+    input[type="time"] {
+      color-scheme: dark;
+    }
+
+    [data-theme="light"] input[type="date"],
+    [data-theme="light"] input[type="time"] {
+      color-scheme: light;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .chip:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .chip[aria-pressed="true"] {
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      border-color: transparent;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(68, 70, 225, 0.35);
+    }
+
+    /* Файл-инпут (фото) */
+    .file-label {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1px dashed var(--border-light);
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .file-label:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    .file-label svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .file-label input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    /* Стекло в светлой теме: tint, чтобы белый текст оставался читаемым */
+    [data-theme="light"] .liquid-glass {
+      background: linear-gradient(135deg, rgba(68, 70, 225, 0.28) 0%, rgba(46, 49, 146, 0.2) 50%, rgba(100, 102, 255, 0.26) 100%);
+    }
+
+    [data-theme="light"] .liquid-glass.weather {
+      background: linear-gradient(135deg, rgba(80, 150, 230, 0.35) 0%, rgba(60, 120, 220, 0.25) 50%, rgba(70, 130, 220, 0.3) 100%);
+    }
+
+    [data-theme="light"] .liquid-glass.schedule {
+      background: linear-gradient(135deg, rgba(160, 110, 240, 0.34) 0%, rgba(120, 85, 205, 0.24) 50%, rgba(140, 100, 230, 0.3) 100%);
+    }
+
+    /* Статусы */
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status--wait {
+      background: rgba(68, 70, 225, 0.22);
+      color: #a5aaff;
+    }
+
+    .status--ok,
+    .status--done {
+      background: rgba(40, 167, 69, 0.18);
+      color: var(--ok-color);
+    }
+
+    .status--bad {
+      background: rgba(220, 53, 69, 0.2);
+      color: var(--bad-color);
+    }
+
+    .status--info {
+      background: rgba(90, 200, 250, 0.16);
+      color: var(--info-color);
+    }
+
+    [data-theme="light"] .status--wait {
+      color: #3d3fd0;
+      background: rgba(68, 70, 225, 0.15);
+    }
+
+    [data-theme="light"] .status--ok,
+    [data-theme="light"] .status--done {
+      background: rgba(34, 197, 94, 0.14);
+    }
+
+    [data-theme="light"] .status--bad {
+      background: rgba(244, 63, 94, 0.12);
+    }
+
+    [data-theme="light"] .status--info {
+      background: rgba(14, 165, 233, 0.12);
+    }
+
+    /* Уведомления-плашки */
+    .notice {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--border-light);
+      background: var(--bg-secondary);
+      margin-top: 0.75rem;
+      overflow-wrap: anywhere;
+    }
+
+    .notice svg {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .notice__body {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: var(--text-secondary);
+    }
+
+    .notice__body strong {
+      display: block;
+      color: var(--text-primary);
+    }
+
+    .notice--ok {
+      border-color: rgba(76, 217, 100, 0.35);
+    }
+
+    .notice--ok svg {
+      color: var(--ok-color);
+    }
+
+    .notice--bad {
+      border-color: rgba(255, 107, 107, 0.35);
+    }
+
+    .notice--bad svg {
+      color: var(--bad-color);
+    }
+
+    .notice--info svg {
+      color: var(--accent);
+    }
+
+    /* Карточка уведомления */
+    .notif__head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .notif__title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      overflow-wrap: anywhere;
+    }
+
+    .notif__date {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .notif__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .notif__type {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    /* Профиль */
+    .profile__row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .profile__name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      overflow-wrap: anywhere;
+    }
+
+    .profile__class {
+      display: inline-block;
+      margin-top: 3px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(68, 70, 225, 0.15);
+      padding: 2px 10px;
+      border-radius: 999px;
+    }
+
+    .profile__account {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+      overflow-wrap: anywhere;
+    }
+
+    .section-title--tight {
+      margin-bottom: 0.75rem;
+    }
+
+    /* Тосты */
+    .toast {
+      position: fixed;
+      z-index: 3000;
+      left: 50%;
+      bottom: calc(env(safe-area-inset-bottom, 0px) + 6.2rem);
+      transform: translate(-50%, 16px);
+      max-width: min(92vw, 420px);
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: rgba(18, 18, 36, 0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid var(--border-light);
+      color: var(--text-primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .toast.is-visible {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    /* Подвал */
+    .page-footer {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .page-actions {
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="theme-btn" class="theme-toggle" type="button" aria-label="Переключить тему оформления">
+    <span id="theme-icon" aria-hidden="true"></span>
+    <span id="theme-label"></span>
+  </button>
+
+  <main class="container">
+
+    <!-- ============ Главная ============ -->
+    <section class="screen is-active" data-screen="home" aria-label="Главная">
+      <div class="greeting-container">
+        <div class="greeting-avatar" aria-hidden="true">
+          <span class="avatar-placeholder" id="home-avatar"></span>
+        </div>
+        <div class="greeting">
+          <div class="greeting-small" id="greeting-hello">Здравствуйте,</div>
+          <div class="greeting-name" id="greeting-name" tabindex="-1">Ученик</div>
+        </div>
+      </div>
+
+      <div class="liquid-glass-row">
+        <div class="liquid-glass weather">
+          <div class="glass-content">
+            <div class="glass-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4h3a2 2 0 0 1 2 2v14"/><path d="M2 20h3"/><path d="M13 20h9"/><path d="M10 12v.01"/></svg>
+            </div>
+            <div class="glass-info">
+              <div class="glass-title" id="glass-exit-count">0</div>
+              <div class="glass-subtitle" id="glass-exit-sub">Активных заявок на выход нет</div>
+            </div>
+          </div>
+        </div>
+        <div class="liquid-glass schedule">
+          <div class="glass-content">
+            <div class="glass-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M8 11h8M8 15h6"/></svg>
+            </div>
+            <div class="glass-info">
+              <div class="glass-title" id="glass-forms-count">0</div>
+              <div class="glass-subtitle" id="glass-forms-sub">Доступных форм нет</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>Сервисы</span></div>
+        <div class="widgets-grid">
+          <button class="widget" type="button" data-go="exit-entry">
+            <div class="widget-icon-large" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            </div>
+            <div class="widget-content">
+              <div class="widget-title">Выход</div>
+              <div class="widget-subtitle" id="widget-exit-sub">Оформить заявку на выход</div>
+            </div>
+          </button>
+          <button class="widget" type="button" data-go="appeal-form">
+            <div class="widget-icon-large" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="widget-content">
+              <div class="widget-title">Обращения</div>
+              <div class="widget-subtitle">Сообщить о проблеме</div>
+            </div>
+          </button>
+          <button class="widget" type="button" data-go="forms">
+            <div class="widget-icon-large" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/><path d="M8 11h8M8 15h6"/></svg>
+            </div>
+            <div class="widget-content">
+              <div class="widget-title">Формы</div>
+              <div class="widget-subtitle" id="widget-forms-sub">Форм пока нет</div>
+            </div>
+          </button>
+          <button class="widget" type="button" data-tab="notifications">
+            <div class="widget-icon-large" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+            </div>
+            <div class="widget-content">
+              <div class="widget-title">Уведомления</div>
+              <div class="widget-subtitle" id="widget-notif-sub">Новых нет</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>Мои заявки</span>
+          <button class="refresh-btn" type="button" data-go="exit-form">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+            Новая
+          </button>
+        </div>
+        <div class="cards-list" id="requests-mini">
+          <div class="empty-state">Заявок пока нет. Нажмите «Новая», чтобы оформить выход из школы.</div>
+        </div>
+      </div>
+
+      <p class="page-footer">1409ID · Приложение ученика · Созданно в школе 1409 · <a href="/apps-pc" style="color: inherit;">ПК-версия</a></p>
+    </section>
+
+    <!-- ============ Сервисы ============ -->
+    <section class="screen" data-screen="services" aria-label="Сервисы">
+      <div class="subbar">
+        <h1 class="subbar__title" tabindex="-1">Сервисы</h1>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>Заявки на выход</span>
+          <button class="refresh-btn" type="button" data-go="exit-form">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+            Новая
+          </button>
+        </div>
+        <div class="cards-list" id="requests-list">
+          <div class="empty-state">Заявок пока нет. Оформите первую заявку на выход.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">
+          <span>Мои обращения</span>
+          <button class="refresh-btn" type="button" data-go="appeal-form">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg>
+            Новое
+          </button>
+        </div>
+        <div class="cards-list" id="appeals-list">
+          <div class="empty-state">Обращений пока нет. Сообщите о проблеме в школе.</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title"><span>Формы и опросы</span></div>
+        <div class="cards-list" id="forms-list">
+          <div class="empty-state">Доступных форм пока нет. Здесь появятся формы и опросы от учителей.</div>
+        </div>
+      </div>
+
+      <p class="page-footer">1409ID · Созданно в школе 1409</p>
+    </section>
+
+    <!-- ============ Уведомления ============ -->
+    <section class="screen" data-screen="notifications" aria-label="Уведомления">
+      <div class="subbar">
+        <h1 class="subbar__title" tabindex="-1">Уведомления</h1>
+        <div class="subbar__right">
+          <button class="refresh-btn" id="read-all-btn" type="button" disabled>Прочитать всё</button>
+        </div>
+      </div>
+      <div class="cards-list" id="notif-list">
+        <div class="empty-state">Уведомлений пока нет. Здесь появится информация о статусах ваших заявок.</div>
+      </div>
+    </section>
+
+    <!-- ============ Профиль ============ -->
+    <section class="screen" data-screen="profile" aria-label="Профиль">
+      <div class="subbar">
+        <h1 class="subbar__title" tabindex="-1">Профиль</h1>
+      </div>
+
+      <div class="section">
+        <div class="section-title section-title--tight"><span>О вас</span></div>
+        <div class="cards-list">
+          <div class="card-item">
+            <div class="profile__row">
+              <div class="greeting-avatar" aria-hidden="true">
+                <span class="avatar-placeholder" id="profile-avatar"></span>
+              </div>
+              <div>
+                <div class="profile__name" id="profile-name">Ученик</div>
+                <div class="profile__class" id="profile-class" hidden></div>
+                <div class="profile__account" id="profile-account-text" hidden></div>
+              </div>
+            </div>
+          </div>
+          <div class="card-item">
+            <form class="form" id="profile-form">
+              <div class="field">
+                <label class="field__label" for="profile-name-input">Имя и фамилия</label>
+                <input class="input" id="profile-name-input" name="name" type="text" placeholder="Например: Алексей Логинов" autocomplete="name">
+              </div>
+              <div class="field">
+                <label class="field__label" for="profile-class-input">Класс</label>
+                <input class="input" id="profile-class-input" name="class" type="text" placeholder="Например: 10Б" autocomplete="organization">
+              </div>
+              <div class="field">
+                <label class="field__label" for="profile-account-input">Аккаунт 1409ID</label>
+                <input class="input" id="profile-account-input" name="account" type="text" placeholder="например: a.loginov@study1409.ru" autocomplete="email">
+              </div>
+              <button class="btn" id="profile-save" type="submit">Сохранить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title section-title--tight"><span>Оформление</span></div>
+        <div class="cards-list">
+          <div class="card-item">
+            <div class="info" style="margin-bottom: 12px;">Тема оформления</div>
+            <div class="chips">
+              <button class="chip" type="button" data-theme-set="dark" aria-pressed="false">Тёмная</button>
+              <button class="chip" type="button" data-theme-set="light" aria-pressed="false">Светлая</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title section-title--tight"><span>О приложении</span></div>
+        <div class="cards-list">
+          <div class="card-item">
+            <div class="student">1409ID — приложение ученика</div>
+            <p class="info">Заявки на выход, обращения по школе, формы и опросы, уведомления. Сейчас работает интерфейс без серверной части: данные будут подключены через API приложения.</p>
+          </div>
+          <div class="card-item">
+            <div class="student" style="margin-bottom: 8px;">Помощь</div>
+            <p class="info">Не нашли ответ на вопрос? Загляните в раздел помощи и напишите боту школы.</p>
+            <div class="request-actions">
+              <a class="request-btn btn-approve" href="/help">Открыть помощь</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="page-actions">
+        <a class="profile-btn" href="/">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 16px; height: 16px;" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Выйти из приложения
+        </a>
+      </div>
+
+      <p class="page-footer">1409ID · Созданно в школе 1409</p>
+    </section>
+
+    <!-- ============ Заявка на выход: вход ============ -->
+    <section class="screen" data-screen="exit-entry" aria-label="Заявка на выход">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" tabindex="-1">Заявка на выход</h1>
+      </div>
+
+      <div class="cards-list" id="exit-entry-hero"></div>
+
+      <div class="section" style="margin-top: 1.5rem; margin-bottom: 0;">
+        <div class="section-title section-title--tight"><span>История заявок</span></div>
+        <div class="cards-list" id="exit-history">
+          <div class="empty-state">История пуста.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Заявка на выход: форма ============ -->
+    <section class="screen" data-screen="exit-form" aria-label="Новая заявка на выход">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" tabindex="-1">Новая заявка</h1>
+      </div>
+
+      <form class="form" id="exit-form" novalidate>
+        <div class="field">
+          <span class="field__label">Причина выхода</span>
+          <div class="chips" id="exit-reason-chips" role="radiogroup"></div>
+          <span class="field__error" id="exit-reason-error" role="alert" hidden></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="exit-date">Дата</label>
+          <input class="input" id="exit-date" name="date" type="date">
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="exit-time">Время ухода</label>
+          <input class="input" id="exit-time" name="time" type="time" value="15:30">
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="exit-return">Время возвращения</label>
+          <input class="input" id="exit-return" name="return" type="time" value="18:00">
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="exit-comment">Комментарий</label>
+          <textarea class="textarea" id="exit-comment" name="comment" placeholder="Необязательно. Например: возвращаюсь к четвёртому уроку"></textarea>
+        </div>
+
+        <button class="btn btn--block" id="exit-submit" type="submit">Отправить учителю</button>
+      </form>
+    </section>
+
+    <!-- ============ Заявка на выход: детали ============ -->
+    <section class="screen" data-screen="exit-detail" aria-label="Детали заявки">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" tabindex="-1">Заявка</h1>
+      </div>
+      <div id="exit-detail-body"></div>
+    </section>
+
+    <!-- ============ Новое обращение ============ -->
+    <section class="screen" data-screen="appeal-form" aria-label="Новое обращение">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" tabindex="-1">Новое обращение</h1>
+      </div>
+
+      <form class="form" id="appeal-form" novalidate>
+        <div class="field">
+          <span class="field__label">Категория</span>
+          <div class="chips" id="appeal-cats" role="group"></div>
+          <span class="field__error" id="appeal-cat-error" role="alert" hidden></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="appeal-desc">Опишите проблему</label>
+          <textarea class="textarea" id="appeal-desc" name="description" placeholder="Что случилось? Опишите подробнее"></textarea>
+          <span class="field__error" id="appeal-desc-error" role="alert" hidden></span>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="appeal-place">Где?</label>
+          <input class="input" id="appeal-place" name="place" type="text" placeholder="Например: кабинет 305, 2 этаж">
+          <span class="field__error" id="appeal-place-error" role="alert" hidden></span>
+        </div>
+
+        <div class="field">
+          <span class="field__label">Фотография</span>
+          <label class="file-label" id="appeal-photo-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span id="appeal-photo-text">Прикрепить фотографию</span>
+            <input id="appeal-photo" name="photo" type="file" accept="image/*">
+          </label>
+        </div>
+
+        <button class="btn btn--block" id="appeal-submit" type="submit">Отправить обращение</button>
+      </form>
+    </section>
+
+    <!-- ============ Формы и опросы ============ -->
+    <section class="screen" data-screen="forms" aria-label="Формы и опросы">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" tabindex="-1">Формы и опросы</h1>
+      </div>
+      <div class="cards-list" id="forms-list-full">
+        <div class="empty-state">Доступных форм пока нет. Здесь появятся формы и опросы от учителей.</div>
+      </div>
+    </section>
+
+    <!-- ============ Форма: заполнение ============ -->
+    <section class="screen" data-screen="form-fill" aria-label="Заполнение формы">
+      <div class="subbar">
+        <button class="back-btn" type="button" data-back aria-label="Назад">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <h1 class="subbar__title" id="form-fill-title" tabindex="-1">Форма</h1>
+      </div>
+      <div id="form-fill-body"></div>
+    </section>
+
+  </main>
+
+  <!-- Нижняя навигация -->
+  <nav class="tabbar" aria-label="Основная навигация">
+    <button class="tab" type="button" data-tab="home" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Главная
+    </button>
+    <button class="tab" type="button" data-tab="services">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Сервисы
+    </button>
+    <button class="tab" type="button" data-tab="notifications">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+      Уведомления
+      <span class="tab__badge" id="tab-badge-notifications" hidden></span>
+    </button>
+    <button class="tab" type="button" data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Профиль
+    </button>
+  </nav>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    'use strict';
+
+    /* ---- Иконки (inline SVG, без внешних сервисов) ---- */
+    const ICONS = {
+      check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>',
+      x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+      info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>',
+      exit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+      user: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+      sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>',
+      moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+    };
+
+    /* ---- Константы ---- */
+    const EXIT_STATUS = {
+      PENDING: { label: 'Ожидает решения', tone: 'wait' },
+      APPROVED: { label: 'Выход разрешён', tone: 'ok' },
+      REJECTED: { label: 'Заявка отклонена', tone: 'bad' },
+      ACTIVE: { label: 'Ученик вышел', tone: 'info' },
+      RETURNED: { label: 'Ученик вернулся', tone: 'done' }
+    };
+
+    const APPEAL_STATUS = {
+      ACCEPTED: { label: 'Принято', tone: 'wait' },
+      IN_WORK: { label: 'В работе', tone: 'info' },
+      DONE: { label: 'Выполнено', tone: 'ok' }
+    };
+
+    const APPEAL_CATEGORIES = ['Сломано', 'Разбито', 'IT-проблема', 'Вода / кулер', 'Чистота', 'Другое'];
+    const EXIT_REASONS = ['По семейным обстоятельствам', 'Медицинское обследование', 'Кружок / секция', 'Другое'];
+
+    const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+    const esc = value => String(value ?? '')
+      .replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+
+    /* ---- API-слой: обёртка над будущим бэкендом приложения ----
+       Сейчас функции возвращают результат локально, без мок-данных.
+       При подключении сервера тела функций заменяются на fetch. */
+    const api = {
+      async createExitRequest(payload) {
+        await delay(600);
+        return {
+          id: 'r' + Date.now(),
+          reason: payload.reason,
+          date: payload.date,
+          dateLabel: payload.dateLabel,
+          time: payload.time,
+          returnTime: payload.returnTime,
+          comment: payload.comment,
+          status: 'PENDING',
+          decidedBy: null,
+          rejectReason: null
+        };
+      },
+      async setExitStatus(id, status) {
+        await delay(400);
+        const request = state.requests.find(item => item.id === id);
+        if (!request) return null;
+        request.status = status;
+        return request;
+      },
+      async createAppeal(payload) {
+        await delay(600);
+        return {
+          id: 'a' + Date.now(),
+          category: payload.category,
+          description: payload.description,
+          place: payload.place,
+          photo: payload.photo,
+          status: 'ACCEPTED',
+          createdAt: 'Только что'
+        };
+      },
+      async submitFormAnswer(formId) {
+        await delay(500);
+        return { formId, submitted: true };
+      },
+      async markAllNotificationsRead() {
+        await delay(250);
+        return true;
+      }
+    };
+
+    /* ---- Профиль (localStorage, без мок-данных) ---- */
+    const profileStore = {
+      read() {
+        try { return JSON.parse(localStorage.getItem('study1409_profile') || 'null') || {}; } catch (e) { return {}; }
+      },
+      write(value) {
+        try { localStorage.setItem('study1409_profile', JSON.stringify(value)); } catch (e) { /* ignore */ }
+      }
+    };
+
+    /* ---- Состояние (пустое; наполняется действиями пользователя) ---- */
+    const savedProfile = profileStore.read();
+    const state = {
+      user: {
+        name: savedProfile.name || 'Ученик',
+        className: savedProfile.className || '',
+        account: savedProfile.account || ''
+      },
+      requests: [],
+      appeals: [],
+      forms: [],
+      notifications: [],
+      reason: null,
+      appealCategory: null,
+      currentRequestId: null,
+      activeTab: 'home',
+      navStack: ['home']
+    };
+
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    const tabs = Array.from(document.querySelectorAll('.tab'));
+    const toastEl = document.getElementById('toast');
+    let toastTimer = null;
+
+    /* ---- Тема оформления ---- */
+    const setTheme = theme => {
+      document.documentElement.setAttribute('data-theme', theme);
+      try { localStorage.setItem('theme', theme); } catch (e) { /* ignore */ }
+      syncThemeUi();
+    };
+
+    const syncThemeUi = () => {
+      const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+      document.getElementById('theme-icon').innerHTML = ICONS[dark ? 'moon' : 'sun'];
+      document.getElementById('theme-label').textContent = dark ? 'Тёмная' : 'Светлая';
+      document.querySelectorAll('[data-theme-set]').forEach(btn => {
+        btn.setAttribute('aria-pressed', String(btn.dataset.themeSet === (dark ? 'dark' : 'light')));
+      });
+    };
+
+    /* ---- Утилиты ---- */
+    const toast = message => {
+      toastEl.textContent = message;
+      toastEl.classList.add('is-visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove('is-visible'), 2600);
+    };
+
+    const statusHtml = meta => `<span class="status status--${meta.tone}">${esc(meta.label)}</span>`;
+
+    const activeRequests = () =>
+      state.requests.filter(item => ['PENDING', 'APPROVED', 'ACTIVE'].includes(item.status));
+
+    const activeRequest = () => activeRequests()[0] || null;
+
+    const openForms = () => state.forms.filter(item => !item.filled);
+
+    const unreadCount = () => state.notifications.filter(item => !item.read).length;
+
+    const showFieldError = (input, node, message) => {
+      node.textContent = message || '';
+      node.hidden = !message;
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    };
+
+    const dateLabel = dateValue => {
+      if (!dateValue) return 'Сегодня';
+      const now = new Date();
+      const [year, month, day] = dateValue.split('-').map(Number);
+      if (year === now.getFullYear() && month - 1 === now.getMonth() && day === now.getDate()) return 'Сегодня';
+      const d = new Date(year, month - 1, day);
+      return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
+    };
+
+    /* ---- Навигация ---- */
+    const showScreen = (name, { push = true } = {}) => {
+      screens.forEach(screen => screen.classList.toggle('is-active', screen.dataset.screen === name));
+      const mainTabs = ['home', 'services', 'notifications', 'profile'];
+      if (mainTabs.includes(name)) {
+        state.activeTab = name;
+        if (push) state.navStack = [name];
+      } else if (push) {
+        state.navStack.push(name);
+      }
+      tabs.forEach(tab => {
+        if (tab.dataset.tab === state.activeTab) tab.setAttribute('aria-current', 'page');
+        else tab.removeAttribute('aria-current');
+      });
+      window.scrollTo(0, 0);
+      render();
+      const active = document.querySelector('.screen.is-active');
+      const heading = active && (active.querySelector('.subbar__title') || document.getElementById('greeting-name'));
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
+    };
+
+    const goBack = () => {
+      if (state.navStack.length > 1) {
+        state.navStack.pop();
+        showScreen(state.navStack[state.navStack.length - 1], { push: false });
+      } else {
+        showScreen('home');
+      }
+    };
+
+    /* ---- Рендер: заголовок ---- */
+    const renderGreeting = () => {
+      const hour = new Date().getHours();
+      const hello = hour < 5 ? 'Доброй ночи,' : hour < 12 ? 'Доброе утро,' : hour < 18 ? 'Добрый день,' : 'Добрый вечер,';
+      document.getElementById('greeting-hello').textContent = hello;
+      document.getElementById('greeting-name').textContent = state.user.name;
+      const initials = state.user.name.trim().split(/\s+/).map(part => part[0]).filter(Boolean)
+        .slice(0, 2).join('').toUpperCase();
+      document.getElementById('home-avatar').textContent = initials || '';
+      if (!initials) document.getElementById('home-avatar').innerHTML = ICONS.user;
+      document.getElementById('profile-avatar').textContent = initials || '';
+      if (!initials) document.getElementById('profile-avatar').innerHTML = ICONS.user;
+    };
+
+    /* ---- Рендер: стеклянные виджеты ---- */
+    const renderGlass = () => {
+      const active = activeRequests();
+      document.getElementById('glass-exit-count').textContent = String(active.length);
+      const exitSub = active[0]
+        ? EXIT_STATUS[active[0].status].label
+        : (state.requests.length ? 'Активных заявок нет' : 'Активных заявок на выход нет');
+      document.getElementById('glass-exit-sub').textContent = exitSub;
+
+      const forms = openForms();
+      document.getElementById('glass-forms-count').textContent = String(forms.length);
+      document.getElementById('glass-forms-sub').textContent = forms.length
+        ? (forms.length === 1 ? 'форма доступна' : 'форм доступно')
+        : 'Доступных форм нет';
+    };
+
+    /* ---- Рендер: виджеты сервисов ---- */
+    const renderWidgets = () => {
+      const active = activeRequest();
+      document.getElementById('widget-exit-sub').textContent = active
+        ? `Сейчас: ${EXIT_STATUS[active.status].label}`
+        : 'Оформить заявку на выход';
+
+      const forms = openForms().length;
+      document.getElementById('widget-forms-sub').textContent = forms
+        ? `${forms} ${forms === 1 ? 'форма доступна' : 'форм доступно'}`
+        : 'Форм пока нет';
+
+      const unread = unreadCount();
+      document.getElementById('widget-notif-sub').textContent = unread
+        ? `Непрочитанных: ${unread}`
+        : (state.notifications.length ? 'Всё прочитано' : 'Новых нет');
+    };
+
+    /* ---- Рендер: карточка заявки ---- */
+    const requestCard = request => `
+      <button class="card-item" type="button" data-request-open="${esc(request.id)}">
+        <div class="student">Заявка на выход</div>
+        <div class="info">${esc(request.dateLabel)}, ${esc(request.time)} · ${esc(request.reason)}</div>
+        ${statusHtml(EXIT_STATUS[request.status])}
+      </button>`;
+
+    /* ---- Рендер: списки ---- */
+    const renderRequests = () => {
+      const lists = [
+        ['requests-mini', 'Заявок пока нет. Нажмите «Новая», чтобы оформить выход из школы.', true],
+        ['requests-list', 'Заявок пока нет. Оформите первую заявку на выход.', false],
+        ['exit-history', 'История пуста.', false]
+      ];
+      lists.forEach(([id, emptyText, mini]) => {
+        const host = document.getElementById(id);
+        const items = mini ? state.requests.slice(0, 2) : state.requests;
+        host.innerHTML = items.length
+          ? items.map(requestCard).join('')
+          : `<div class="empty-state">${esc(emptyText)}</div>`;
+      });
+    };
+
+    const renderAppeals = () => {
+      const host = document.getElementById('appeals-list');
+      host.innerHTML = state.appeals.length
+        ? state.appeals.map(item => `
+          <div class="card-item">
+            <div class="notif__head">
+              <div class="notif__title">${esc(item.category)}</div>
+              ${statusHtml(APPEAL_STATUS[item.status])}
+            </div>
+            <div class="info" style="margin-bottom: 4px;">${esc(item.createdAt)} · ${esc(item.place)}</div>
+            <div class="info" style="margin-bottom: 0;">${esc(item.description)}</div>
+          </div>`).join('')
+        : '<div class="empty-state">Обращений пока нет. Сообщите о проблеме в школе.</div>';
+    };
+
+    const formsCards = form => `
+      <div class="card-item">
+        <div class="notif__head">
+          <div class="notif__title">${esc(form.title)}</div>
+          ${form.filled ? '<span class="status status--ok">Пройдено</span>' : ''}
+        </div>
+        <div class="info" style="margin-bottom: 8px;">${esc(form.description)}${form.deadline ? ` · ${esc(form.deadline)}` : ''}</div>
+        <div class="info" style="margin-bottom: 12px;">Вопросов: ${form.questionCount}</div>
+        ${form.filled
+          ? '<div class="request-actions"><span class="status status--ok">Ответ отправлен</span></div>'
+          : `<div class="request-actions"><button class="request-btn btn-approve" type="button" data-form-open="${esc(form.id)}">Пройти</button></div>`}
+      </div>`;
+
+    const renderForms = () => {
+      ['forms-list', 'forms-list-full'].forEach(id => {
+        const host = document.getElementById(id);
+        if (!host) return;
+        host.innerHTML = state.forms.length
+          ? state.forms.map(formsCards).join('')
+          : '<div class="empty-state">Доступных форм пока нет. Здесь появятся формы и опросы от учителей.</div>';
+      });
+    };
+
+    const renderNotifications = () => {
+      const host = document.getElementById('notif-list');
+      host.innerHTML = state.notifications.length
+        ? state.notifications.map(item => `
+          <button class="card-item" type="button" data-notif="${esc(item.id)}">
+            <div class="notif__head">
+              <div class="notif__title">${!item.read ? '<span class="notif__dot" style="display: inline-block; margin-right: 8px; vertical-align: middle;"></span>' : ''}${esc(item.title)}</div>
+              <div class="notif__date">${esc(item.date)}</div>
+            </div>
+            <div class="info" style="margin-bottom: 0;">${esc(item.text)}</div>
+          </button>`).join('')
+        : '<div class="empty-state">Уведомлений пока нет. Здесь появится информация о статусах ваших заявок.</div>';
+      document.getElementById('read-all-btn').disabled = state.notifications.length === 0;
+    };
+
+    /* ---- Рендер: экран «Заявка на выход» ---- */
+    const renderExitEntry = () => {
+      const hero = document.getElementById('exit-entry-hero');
+      const request = activeRequest();
+      hero.innerHTML = request
+        ? `
+          <div class="card-item">
+            <div class="notif__head">
+              <div class="notif__title">Активная заявка</div>
+              ${statusHtml(EXIT_STATUS[request.status])}
+            </div>
+            <div class="info">${esc(request.dateLabel)}, ${esc(request.time)} · возвращение ${esc(request.returnTime)}</div>
+            <div class="request-actions">
+              <button class="request-btn btn-approve" type="button" data-request-open="${esc(request.id)}">Подробнее</button>
+              <button class="request-btn btn-reject" type="button" data-go="exit-form">Новая заявка</button>
+            </div>
+          </div>`
+        : `
+          <div class="card-item">
+            <div class="student">Оформить заявку на выход</div>
+            <p class="info">Расскажите учителю, когда и почему вы хотите выйти из школы. Заявка появится здесь с текущим статусом.</p>
+            <div class="request-actions">
+              <button class="request-btn btn-approve" type="button" data-go="exit-form">Создать заявку</button>
+            </div>
+          </div>`;
+    };
+
+    /* ---- Рендер: детали заявки ---- */
+    const renderExitDetail = () => {
+      const host = document.getElementById('exit-detail-body');
+      const request = state.requests.find(item => item.id === state.currentRequestId);
+      if (!request) {
+        host.innerHTML = '<div class="cards-list"><div class="empty-state">Заявка не найдена. Вернитесь и выберите заявку заново.</div></div>';
+        return;
+      }
+
+      const meta = EXIT_STATUS[request.status];
+      let notice = '';
+      if (request.status === 'PENDING') {
+        notice = `<div class="notice notice--info">${ICONS.info}<div class="notice__body"><strong>Заявка отправлена учителю</strong>Статус изменится, когда учитель рассмотрит заявку.</div></div>`;
+      }
+      if (request.status === 'APPROVED') {
+        notice = `<div class="notice notice--ok">${ICONS.check}<div class="notice__body"><strong>Выход разрешён</strong>${request.decidedBy ? esc(request.decidedBy) : ''}</div></div>`;
+      }
+      if (request.status === 'REJECTED') {
+        notice = `<div class="notice notice--bad">${ICONS.x}<div class="notice__body"><strong>Заявка отклонена</strong>${request.rejectReason ? `Причина: «${esc(request.rejectReason)}»` : ''} Можете оформить новую заявку.</div></div>`;
+      }
+      if (request.status === 'ACTIVE') {
+        notice = `<div class="notice notice--info">${ICONS.info}<div class="notice__body"><strong>Ученик вышел</strong>Не забудьте вернуться к ${esc(request.returnTime)}.</div></div>`;
+      }
+      if (request.status === 'RETURNED') {
+        notice = `<div class="notice notice--ok">${ICONS.check}<div class="notice__body"><strong>Ученик вернулся</strong>Заявка закрыта.</div></div>`;
+      }
+
+      const actions = [];
+      if (request.status === 'APPROVED') {
+        actions.push(`<button class="btn btn--block" type="button" data-request-status="ACTIVE" data-request-id="${esc(request.id)}">Воспользоваться разрешением</button>`);
+      }
+      if (request.status === 'ACTIVE') {
+        actions.push(`<button class="btn btn--ghost btn--block" type="button" data-request-status="RETURNED" data-request-id="${esc(request.id)}">Я вернулся</button>`);
+      }
+      if (request.status === 'REJECTED' || request.status === 'RETURNED') {
+        actions.push(`<button class="btn btn--block" type="button" data-go="exit-form">Создать новую заявку</button>`);
+      }
+
+      host.innerHTML = `
+        <div class="cards-list">
+          <div class="card-item">
+            <div class="notif__head">
+              <div class="notif__title">${esc(request.reason)}</div>
+              ${statusHtml(meta)}
+            </div>
+            <div class="info">
+              ${esc(request.dateLabel)}, ${esc(request.time)} → ${esc(request.returnTime)}
+            </div>
+            ${request.comment ? `<div class="info" style="margin-bottom: 0;">${esc(request.comment)}</div>` : ''}
+          </div>
+        </div>
+        ${notice}
+        ${actions.length ? `<div class="request-actions">${actions.join('')}</div>` : ''}`;
+    };
+
+    /* ---- Рендер: заполнение формы ---- */
+    const renderFormFill = () => {
+      const form = state.forms.find(item => item.id === state.currentFormId);
+      const host = document.getElementById('form-fill-body');
+      document.getElementById('form-fill-title').textContent = form ? form.title : 'Форма';
+      if (!form) {
+        host.innerHTML = '<div class="cards-list"><div class="empty-state">Форма не найдена.</div></div>';
+        return;
+      }
+      host.innerHTML = `
+        <div class="cards-list">
+          <div class="card-item">
+            <div class="info" style="margin-bottom: 12px;">${esc(form.description)}${form.deadline ? ` · ${esc(form.deadline)}` : ''}</div>
+            <form class="form" id="form-answers">
+              ${form.questions.map((question, index) => question.type === 'radio'
+                ? `
+                  <fieldset class="field" style="border: 0;">
+                    <legend class="field__label">${index + 1}. ${esc(question.label)}</legend>
+                    <div class="chips">
+                      ${question.options.map((option, i) => `
+                        <label class="chip">
+                          <input type="radio" name="${esc(question.id)}" value="${esc(option)}" ${i === 0 ? 'checked' : ''} style="position: absolute; opacity: 0; pointer-events: none;">
+                          <span>${esc(option)}</span>
+                        </label>`).join('')}
+                    </div>
+                  </fieldset>`
+                : `
+                  <div class="field">
+                    <label class="field__label" for="ans-${esc(question.id)}">${index + 1}. ${esc(question.label)}</label>
+                    <input class="input" type="text" id="ans-${esc(question.id)}" name="${esc(question.id)}" placeholder="Ваш ответ">
+                  </div>`).join('')}
+              <button class="btn btn--block" id="form-answer-submit" type="submit">Отправить ответ</button>
+            </form>
+          </div>
+        </div>`;
+    };
+
+    /* ---- Рендер: профиль ---- */
+    const renderProfile = () => {
+      document.getElementById('profile-name').textContent = state.user.name || 'Ученик';
+      const classEl = document.getElementById('profile-class');
+      classEl.textContent = state.user.className;
+      classEl.hidden = !state.user.className;
+      const accountEl = document.getElementById('profile-account-text');
+      accountEl.textContent = state.user.account;
+      accountEl.hidden = !state.user.account;
+      document.getElementById('profile-name-input').value = state.user.name === 'Ученик' ? '' : state.user.name;
+      document.getElementById('profile-class-input').value = state.user.className;
+      document.getElementById('profile-account-input').value = state.user.account;
+    };
+
+    const render = () => {
+      renderGreeting();
+      renderGlass();
+      renderWidgets();
+      renderRequests();
+      renderAppeals();
+      renderForms();
+      renderNotifications();
+      renderProfile();
+      updateBadges();
+      const active = document.querySelector('.screen.is-active');
+      if (active) {
+        if (active.dataset.screen === 'exit-entry') renderExitEntry();
+        if (active.dataset.screen === 'exit-detail') renderExitDetail();
+        if (active.dataset.screen === 'form-fill') renderFormFill();
+      }
+    };
+
+    const updateBadges = () => {
+      const badge = document.getElementById('tab-badge-notifications');
+      const unread = unreadCount();
+      badge.hidden = unread === 0;
+      badge.textContent = String(unread);
+    };
+
+    /* ---- Чипы причин и категорий ---- */
+    const renderChips = (hostId, items, selected, onSelect) => {
+      const host = document.getElementById(hostId);
+      host.innerHTML = items.map(item => `
+        <button class="chip" type="button" ${onSelect === 'category' ? `data-cat="${esc(item)}"` : `data-reason="${esc(item)}"`}
+          aria-pressed="${selected === item}">${esc(item)}</button>`).join('');
+    };
+
+    /* ---- События ---- */
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      setTheme(current === 'light' ? 'dark' : 'light');
+    });
+
+    document.addEventListener('click', event => {
+      const themeSet = event.target.closest('[data-theme-set]');
+      if (themeSet) {
+        setTheme(themeSet.dataset.themeSet);
+        return;
+      }
+
+      const tab = event.target.closest('[data-tab]');
+      if (tab) {
+        showScreen(tab.dataset.tab);
+        return;
+      }
+
+      const go = event.target.closest('[data-go]');
+      if (go) {
+        showScreen(go.dataset.go);
+        return;
+      }
+
+      const back = event.target.closest('[data-back]');
+      if (back) {
+        goBack();
+        return;
+      }
+
+      const openRequest = event.target.closest('[data-request-open]');
+      if (openRequest) {
+        state.currentRequestId = openRequest.dataset.requestOpen;
+        showScreen('exit-detail');
+        return;
+      }
+
+      const setStatus = event.target.closest('[data-request-status]');
+      if (setStatus) {
+        applyStatus(setStatus.dataset.requestStatus, setStatus.dataset.requestId);
+        return;
+      }
+
+      const reason = event.target.closest('[data-reason]');
+      if (reason) {
+        state.reason = reason.dataset.reason;
+        document.querySelectorAll('[data-reason]').forEach(btn => {
+          btn.setAttribute('aria-pressed', String(btn.dataset.reason === state.reason));
+        });
+        document.getElementById('exit-reason-error').hidden = true;
+        return;
+      }
+
+      const cat = event.target.closest('[data-cat]');
+      if (cat) {
+        state.appealCategory = cat.dataset.cat;
+        document.querySelectorAll('[data-cat]').forEach(btn => {
+          btn.setAttribute('aria-pressed', String(btn.dataset.cat === state.appealCategory));
+        });
+        document.getElementById('appeal-cat-error').hidden = true;
+        return;
+      }
+
+      const notif = event.target.closest('[data-notif]');
+      if (notif) {
+        const id = notif.dataset.notif;
+        const item = state.notifications.find(n => n.id === id);
+        const hadFocus = document.activeElement === notif;
+        if (item) item.read = true;
+        render();
+        if (hadFocus) {
+          const again = document.querySelector(`[data-notif="${id}"]`);
+          if (again) again.focus({ preventScroll: true });
+        }
+        return;
+      }
+
+      const formOpen = event.target.closest('[data-form-open]');
+      if (formOpen) {
+        state.currentFormId = formOpen.dataset.formOpen;
+        showScreen('form-fill');
+      }
+    });
+
+    const applyStatus = async (status, requestId) => {
+      const request = state.requests.find(item => item.id === (requestId || state.currentRequestId));
+      if (!request) return;
+      state.currentRequestId = request.id;
+      await api.setExitStatus(request.id, status);
+      render();
+      toast(EXIT_STATUS[status].label);
+    };
+
+    document.getElementById('read-all-btn').addEventListener('click', async () => {
+      if (!state.notifications.length) return;
+      await api.markAllNotificationsRead();
+      state.notifications.forEach(item => { item.read = true; });
+      render();
+      toast('Все уведомления прочитаны');
+    });
+
+    /* ---- Отправка заявки на выход ---- */
+    document.getElementById('exit-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const reasonError = document.getElementById('exit-reason-error');
+      if (!state.reason) {
+        reasonError.textContent = 'Выберите причину выхода';
+        reasonError.hidden = false;
+        const firstChip = document.querySelector('[data-reason]');
+        if (firstChip) firstChip.focus();
+        return;
+      }
+      reasonError.hidden = true;
+
+      const dateInput = document.getElementById('exit-date');
+      const comment = document.getElementById('exit-comment').value.trim();
+      const submitBtn = document.getElementById('exit-submit');
+      submitBtn.setAttribute('aria-busy', 'true');
+      submitBtn.disabled = true;
+
+      const created = await api.createExitRequest({
+        reason: state.reason,
+        date: dateInput.value,
+        dateLabel: dateLabel(dateInput.value),
+        time: document.getElementById('exit-time').value || '15:30',
+        returnTime: document.getElementById('exit-return').value || '18:00',
+        comment
+      });
+
+      state.requests.unshift(created);
+      state.currentRequestId = created.id;
+      state.reason = null;
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.disabled = false;
+      event.target.reset();
+      dateInput.valueAsDate = new Date();
+      document.getElementById('exit-time').value = '15:30';
+      document.getElementById('exit-return').value = '18:00';
+      document.querySelectorAll('[data-reason]').forEach(btn => btn.setAttribute('aria-pressed', 'false'));
+
+      toast('Заявка отправлена учителю');
+      state.navStack = ['home', 'exit-detail'];
+      showScreen('exit-detail', { push: false });
+    });
+
+    /* ---- Отправка обращения ---- */
+    document.getElementById('appeal-photo').addEventListener('change', event => {
+      const file = event.target.files[0];
+      document.getElementById('appeal-photo-text').textContent = file ? file.name : 'Прикрепить фотографию';
+    });
+
+    document.getElementById('appeal-form').addEventListener('submit', async event => {
+      event.preventDefault();
+      const desc = document.getElementById('appeal-desc');
+      const place = document.getElementById('appeal-place');
+      const descError = document.getElementById('appeal-desc-error');
+      const placeError = document.getElementById('appeal-place-error');
+      const catError = document.getElementById('appeal-cat-error');
+      let invalid = null;
+
+      if (!state.appealCategory) {
+        catError.textContent = 'Выберите категорию';
+        catError.hidden = false;
+        invalid = invalid || document.querySelector('[data-cat]');
+      } else {
+        catError.hidden = true;
+      }
+
+      if (!desc.value.trim()) {
+        showFieldError(desc, descError, 'Опишите проблему');
+        invalid = invalid || desc;
+      } else {
+        showFieldError(desc, descError, '');
+      }
+
+      if (!place.value.trim()) {
+        showFieldError(place, placeError, 'Укажите место');
+        invalid = invalid || place;
+      } else {
+        showFieldError(place, placeError, '');
+      }
+
+      if (invalid) {
+        invalid.focus();
+        return;
+      }
+
+      const submitBtn = document.getElementById('appeal-submit');
+      submitBtn.setAttribute('aria-busy', 'true');
+      submitBtn.disabled = true;
+
+      const created = await api.createAppeal({
+        category: state.appealCategory,
+        description: desc.value.trim(),
+        place: place.value.trim(),
+        photo: document.getElementById('appeal-photo').files[0]?.name || null
+      });
+
+      state.appeals.unshift(created);
+      state.appealCategory = null;
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.disabled = false;
+      event.target.reset();
+      document.getElementById('appeal-photo-text').textContent = 'Прикрепить фотографию';
+      document.querySelectorAll('[data-cat]').forEach(btn => btn.setAttribute('aria-pressed', 'false'));
+
+      toast('Обращение принято');
+      state.navStack = ['home', 'services'];
+      showScreen('services', { push: false });
+    });
+
+    document.getElementById('form-fill-body').addEventListener('submit', async event => {
+      if (event.target.id !== 'form-answers') return;
+      event.preventDefault();
+      const submitBtn = document.getElementById('form-answer-submit');
+      submitBtn.setAttribute('aria-busy', 'true');
+      submitBtn.disabled = true;
+
+      const form = state.forms.find(item => item.id === state.currentFormId);
+      await api.submitFormAnswer(state.currentFormId);
+      if (form) form.filled = true;
+
+      submitBtn.removeAttribute('aria-busy');
+      submitBtn.disabled = false;
+      toast('Ответ отправлен');
+      goBack();
+    });
+
+    /* ---- Сохранение профиля ---- */
+    document.getElementById('profile-form').addEventListener('submit', event => {
+      event.preventDefault();
+      state.user.name = document.getElementById('profile-name-input').value.trim() || 'Ученик';
+      state.user.className = document.getElementById('profile-class-input').value.trim();
+      state.user.account = document.getElementById('profile-account-input').value.trim();
+      profileStore.write(state.user);
+      render();
+      toast('Профиль сохранён');
+    });
+
+    /* ---- Инициализация ---- */
+    const dateInput = document.getElementById('exit-date');
+    dateInput.valueAsDate = new Date();
+    syncThemeUi();
+    renderChips('exit-reason-chips', EXIT_REASONS, null, 'reason');
+    renderChips('appeal-cats', APPEAL_CATEGORIES, null, 'category');
+    render();
+  </script>
+</body>
+</html>
