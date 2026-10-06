@@ -1,786 +1,814 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="color-scheme" content="dark">
-<meta name="theme-color" content="#000000">
-<meta name="description" content="Вход в панель STUDY1409: расписание занятий, дедлайны и зачёты.">
-<title>STUDY1409 — Вход в панель</title>
-<script>document.documentElement.classList.add('js')</script>
-<style>
-  :root {
-    --surface-base: #000000;
-    --surface-raised: #121216;
-    --surface-field: #0e0e12;
-    --surface-raised-alt: #191c1f;
-    --line: #23242a;
-    --line-strong: #34363e;
-
-    --text-primary: #ffffff;
-    --text-body: #e6e7ec;
-    --text-muted: #a2a4ae;
-    --text-faint: #8a8c96;
-    --text-accent: #6fa0ff;
-
-    --accent: #4446e1;
-    --accent-hover: #5658f0;
-    --accent-active: #383ad0;
-    --accent-soft: rgba(68, 70, 225, 0.14);
-    --focus: #8fa9ff;
-    --focus-ring: rgba(143, 169, 255, 0.42);
-
-    --danger: #ff6b6b;
-    --danger-soft: rgba(255, 107, 107, 0.12);
-
-    --font: "Inter", -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-
-    --text-xs: 12.75px;
-    --text-sm: 13.5px;
-    --text-md: 15px;
-    --text-lg: 19px;
-    --text-display: 40px;
-
-    --space-1: 4px;
-    --space-2: 6px;
-    --space-3: 10px;
-    --space-4: 14px;
-    --space-5: 20px;
-    --space-6: 36px;
-
-    --radius-field: 10px;
-    --radius-card: 20px;
-    --radius-pill: 9999px;
-
-    --shadow-glow: 0 2px 12px 0 rgba(68, 70, 225, 0.3);
-    --shadow-lift: 0 12px 40px 0 rgba(0, 0, 0, 0.6);
-
-    --motion-instant: 200ms;
-    --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-
-  html, body { height: 100%; }
-
-  body {
-    margin: 0;
-    background: var(--surface-base);
-    color: var(--text-body);
-    font-family: var(--font);
-    font-size: var(--text-md);
-    line-height: 1.5;
-    font-weight: 400;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-  }
-
-  a { color: var(--text-accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-
-  :where(a, button, input, [tabindex]):focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 2px;
-  }
-
-  :where(a, button):focus-visible { border-radius: 6px; }
-
-  .auth {
-    min-height: 100vh;
-    min-height: 100svh;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(480px, 44%);
-    width: 100%;
-    max-width: 1760px;
-    margin-inline: auto;
-    border-inline: 1px solid var(--line);
-  }
-
-  .auth__aside {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: var(--space-6);
-    padding: clamp(28px, 3.2vw, 64px);
-    border-right: 1px solid var(--line);
-    background:
-      radial-gradient(120% 80% at 8% 0%, rgba(68, 70, 225, 0.22), transparent 62%),
-      radial-gradient(90% 60% at 100% 100%, rgba(111, 160, 255, 0.08), transparent 70%),
-      var(--surface-base);
-  }
-
-  .auth__aside::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-image:
-      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
-    background-size: 44px 44px;
-    -webkit-mask-image: radial-gradient(120% 90% at 20% 10%, #000 20%, transparent 78%);
-    mask-image: radial-gradient(120% 90% at 20% 10%, #000 20%, transparent 78%);
-  }
-
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-3);
-    color: var(--text-primary);
-    font-size: var(--text-sm);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-  }
-
-  .brand:hover { text-decoration: none; }
-
-  .brand__mark {
-    width: 30px;
-    height: 30px;
-    flex: none;
-    border-radius: 8px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(150deg, var(--accent), #2b2d9c);
-    box-shadow: var(--shadow-glow);
-  }
-
-  .brand__mark svg { width: 16px; height: 16px; }
-
-  .aside__lead {
-    max-width: 20ch;
-    margin: 0;
-    color: var(--text-primary);
-    font-size: clamp(28px, 3.4vw, 40px);
-    font-weight: 600;
-    line-height: 1.14;
-    letter-spacing: -0.025em;
-    text-wrap: balance;
-  }
-
-  .aside__note {
-    max-width: 46ch;
-    margin: var(--space-4) 0 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-  }
-
-  .session {
-    width: min(100%, 420px);
-    padding: var(--space-5);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-card);
-    background: linear-gradient(180deg, rgba(25, 28, 31, 0.86), rgba(10, 10, 14, 0.86));
-    box-shadow: var(--shadow-lift);
-    backdrop-filter: blur(6px);
-  }
-
-  .session__label {
-    margin: 0 0 var(--space-2);
-    color: var(--text-faint);
-    font-size: var(--text-xs);
-    letter-spacing: 0.02em;
-  }
-
-  .session__clock {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: var(--text-display);
-    font-weight: 600;
-    line-height: 1.05;
-    letter-spacing: -0.03em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .session__title {
-    margin: var(--space-4) 0 0;
-    color: var(--text-body);
-    font-size: var(--text-lg);
-    font-weight: 500;
-  }
-
-  .session__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2) var(--space-4);
-    margin: var(--space-2) 0 0;
-    padding: 0;
-    list-style: none;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-  }
-
-  .session__meta span {
-    padding: 2px 10px;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-pill);
-  }
-
-  .aside__foot {
-    margin: 0;
-    color: var(--text-faint);
-    font-size: var(--text-xs);
-  }
-
-  .auth__panel {
-    display: flex;
-    flex-direction: column;
-    padding: clamp(28px, 3.4vw, 72px);
-    background: var(--surface-base);
-  }
-
-  .auth__inner {
-    width: min(100%, 420px);
-    margin-block: auto;
-    margin-inline: auto;
-  }
-
-  .auth__mobileBrand { display: none; }
-
-  .title {
-    margin: 0;
-    color: var(--text-primary);
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-  }
-
-  .subtitle {
-    margin: var(--space-2) 0 0;
-    color: var(--text-muted);
-    font-size: var(--text-sm);
-  }
-
-  .form {
-    margin: var(--space-6) 0 0;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .field { display: flex; flex-direction: column; gap: var(--space-2); }
-
-  .field__label {
-    color: var(--text-body);
-    font-size: var(--text-sm);
-    font-weight: 500;
-  }
-
-  .control {
-    position: relative;
-    display: flex;
-    align-items: center;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-field);
-    background: var(--surface-field);
-    transition: border-color var(--motion-instant) var(--ease), box-shadow var(--motion-instant) var(--ease);
-  }
-
-  .control:hover { border-color: #45474f; }
-
-  .control:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px var(--focus-ring);
-  }
-
-  .control__input {
-    width: 100%;
-    min-height: 48px;
-    padding: var(--space-3) var(--space-4);
-    border: 0;
-    border-radius: inherit;
-    background: transparent;
-    color: var(--text-primary);
-    font: inherit;
-    font-size: var(--text-md);
-  }
-
-  .control__input::placeholder { color: #85878f; }
-
-  .control__input:focus { outline: none; }
-
-  .control__input:-webkit-autofill {
-    -webkit-text-fill-color: var(--text-primary);
-    -webkit-box-shadow: 0 0 0 1000px var(--surface-field) inset;
-    caret-color: var(--text-primary);
-  }
-
-  .control__input:disabled {
-    color: var(--text-faint);
-    cursor: not-allowed;
-  }
-
-  .control--invalid {
-    border-color: var(--danger);
-    box-shadow: 0 0 0 3px var(--danger-soft);
-  }
-
-  .control--disabled { opacity: 0.55; }
-
-  .reveal {
-    flex: none;
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    margin-right: var(--space-1);
-    border: 0;
-    border-radius: var(--radius-field);
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: color var(--motion-instant) var(--ease), background-color var(--motion-instant) var(--ease);
-  }
-
-  .reveal:hover { color: var(--text-primary); background: rgba(255, 255, 255, 0.06); }
-  .reveal svg { width: 20px; height: 20px; }
-
-  .field__error {
-    display: none;
-    margin: 0;
-    color: var(--danger);
-    font-size: var(--text-xs);
-  }
-
-  .field__error[data-visible="true"] { display: block; }
-
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--space-2) var(--space-4);
-  }
-
-  .check {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-2);
-    min-height: 44px;
-    color: var(--text-body);
-    font-size: var(--text-sm);
-    cursor: pointer;
-  }
-
-  .check input {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    accent-color: var(--accent);
-    cursor: pointer;
-  }
-
-  .row__link { font-size: var(--text-sm); }
-
-  .alert {
-    display: none;
-    margin: 0;
-    padding: var(--space-3) var(--space-4);
-    border: 1px solid rgba(255, 107, 107, 0.4);
-    border-radius: var(--radius-field);
-    background: var(--danger-soft);
-    color: #ffb3b3;
-    font-size: var(--text-sm);
-  }
-
-  .alert[data-visible="true"] { display: block; }
-
-  .submit {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    min-height: 50px;
-    padding: var(--space-3) var(--space-5);
-    border: 0;
-    border-radius: var(--radius-pill);
-    background: var(--accent);
-    color: #ffffff;
-    font: inherit;
-    font-size: var(--text-md);
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: var(--shadow-glow);
-    transition: background-color var(--motion-instant) var(--ease), transform var(--motion-instant) var(--ease);
-  }
-
-  .submit:hover { background: var(--accent-hover); }
-  .submit:active { background: var(--accent-active); transform: translateY(1px); }
-  .submit:disabled { cursor: not-allowed; box-shadow: none; opacity: 0.7; }
-
-  .submit__arrow { transition: transform var(--motion-instant) var(--ease); }
-  .submit:hover .submit__arrow { transform: translateX(3px); }
-
-  .submit__spinner { display: none; width: 18px; height: 18px; }
-
-  .submit[data-loading="true"] .submit__spinner {
-    display: block;
-    animation: spin 700ms linear infinite;
-  }
-
-  .submit[data-loading="true"] { pointer-events: none; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: var(--space-3);
-    color: var(--text-faint);
-    font-size: var(--text-xs);
-  }
-
-  .divider::before,
-  .divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: var(--line);
-  }
-
-  .sso {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-2);
-    min-height: 50px;
-    padding: var(--space-3) var(--space-5);
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-pill);
-    background: var(--surface-raised-alt);
-    color: var(--text-primary);
-    font: inherit;
-    font-size: var(--text-md);
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color var(--motion-instant) var(--ease), border-color var(--motion-instant) var(--ease);
-  }
-
-  .sso:hover { background: #22262b; border-color: #4a4d55; }
-  .sso:active { background: #1c1f23; }
-  .sso:disabled { cursor: not-allowed; opacity: 0.6; }
-  .sso svg { width: 18px; height: 18px; color: var(--text-accent); }
-
-  .auth__legal {
-    margin: var(--space-5) 0 0;
-    color: var(--text-faint);
-    font-size: var(--text-xs);
-  }
-
-  .js .reveal-on-load { opacity: 0; transform: translateY(10px); }
-
-  .is-ready .reveal-on-load {
-    animation: rise 420ms var(--ease) both;
-  }
-
-  .is-ready .reveal-on-load:nth-child(1) { animation-delay: 40ms; }
-  .is-ready .reveal-on-load:nth-child(2) { animation-delay: 110ms; }
-  .is-ready .reveal-on-load:nth-child(3) { animation-delay: 180ms; }
-  .is-ready .reveal-on-load:nth-child(4) { animation-delay: 250ms; }
-  .is-ready .reveal-on-load:nth-child(5) { animation-delay: 320ms; }
-  .is-ready .reveal-on-load:nth-child(6) { animation-delay: 390ms; }
-
-  @keyframes rise {
-    to { opacity: 1; transform: none; }
-  }
-
-  @media (min-width: 901px) {
-    .aside__lead {
-      font-size: clamp(30px, 2.5vw, 40px);
-      max-width: 17ch;
-    }
-
-    .session { width: min(100%, 460px); }
-
-    .control__input { min-height: 50px; }
-
-    .submit,
-    .sso { min-height: 52px; }
-  }
-
-  @media (min-width: 1600px) {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#000000">
+  <meta name="description" content="STUDY1409 — вход в аккаунт ученика школы №1409: расписание, заявки, сервисы школы.">
+  <title>STUDY1409: Вход в аккаунт</title>
+  <link rel="icon" href="/static/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add('js')</script>
+  <style>
     :root {
-      --text-md: 16px;
-      --text-lg: 20px;
-      --text-display: 52px;
+      --bg-primary: #000000;
+      --bg-secondary: rgba(255, 255, 255, 0.08);
+      --bg-tertiary: rgba(255, 255, 255, 0.06);
+      --bg-hover: rgba(255, 255, 255, 0.12);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.78);
+      --text-muted: rgba(255, 255, 255, 0.62);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-light: rgba(255, 255, 255, 0.15);
+      --accent: #4446E1;
+      --accent-deep: #2E3192;
+      --danger: #ff6b6b;
+      --cloud-1: rgba(68, 70, 225, 0.4);
+      --cloud-2: rgba(220, 53, 69, 0.35);
+      --cloud-3: rgba(100, 102, 255, 0.3);
+      --cloud-4: rgba(255, 80, 100, 0.25);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --focus: #a9b0ff;
+      --font: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      --radius-field: 14px;
+      --radius-card: 28px;
+      --radius-item: 18px;
     }
 
-    .auth { grid-template-columns: minmax(0, 1fr) minmax(560px, 40%); }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    .auth__inner { width: min(100%, 440px); }
+    html { -webkit-text-size-adjust: 100%; }
 
-    .aside__lead { font-size: 46px; }
-
-    .aside__note { font-size: var(--text-md); }
-
-    .title { font-size: 30px; }
-  }
-
-  @media (min-width: 1920px) {
-    :root {
-      --space-6: 40px;
-      --space-5: 24px;
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .auth { max-width: 1920px; }
-
-    .control__input { min-height: 54px; }
-
-    .form { gap: var(--space-5); }
-  }
-
-  @media (min-width: 901px) and (max-height: 860px) {
-    .auth__aside { gap: var(--space-5); padding-block: clamp(24px, 2.4vw, 40px); }
-
-    .aside__lead { font-size: clamp(26px, 2.2vw, 34px); }
-
-    .aside__note { margin-top: var(--space-2); }
-
-    .session { padding: var(--space-4); }
-
-    .form { margin-top: var(--space-5); gap: var(--space-3); }
-
-    .control__input { min-height: 46px; }
-
-    .submit,
-    .sso { min-height: 48px; }
-  }
-
-  @media (max-width: 900px) {
-    .auth {
-      grid-template-columns: 1fr;
-      border-inline: 0;
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      pointer-events: none;
     }
 
-    .auth__aside { display: none; }
+    body::before {
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(ellipse 80% 60% at 30% 20%, var(--cloud-1) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 50% at 70% 30%, var(--cloud-2) 0%, transparent 50%);
+      animation: cloudFloat 20s ease-in-out infinite, cloudFadeIn 1.2s ease-out both;
+    }
 
-    .auth__panel { padding: var(--space-6) var(--space-5); min-height: 100vh; }
+    body::after {
+      top: -30%;
+      left: -30%;
+      width: 160%;
+      height: 160%;
+      background:
+        radial-gradient(ellipse 50% 40% at 60% 25%, var(--cloud-3) 0%, transparent 45%),
+        radial-gradient(ellipse 40% 35% at 40% 35%, var(--cloud-4) 0%, transparent 40%);
+      animation: cloudFloat2 25s ease-in-out infinite reverse, cloudFadeIn 1.6s ease-out both;
+    }
 
-    .auth__mobileBrand {
+    @keyframes cloudFadeIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes cloudFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(4%, 3%) scale(1.05); }
+      50% { transform: translate(-3%, 4%) scale(0.98); }
+      75% { transform: translate(-4%, -2%) scale(1.02); }
+    }
+
+    @keyframes cloudFloat2 {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-4%, 4%) rotate(2deg); }
+      66% { transform: translate(4%, -3%) rotate(-2deg); }
+    }
+
+    :where(a, button, input):focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1180px;
+      margin-inline: auto;
+      padding: clamp(24px, 3vw, 48px) clamp(16px, 3vw, 32px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: clamp(20px, 2.4vw, 32px);
+      text-align: center;
+    }
+
+    .brand-header img {
+      height: 64px;
+      filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.35));
+    }
+
+    .brand-header h1 {
+      font-size: clamp(20px, 2vw, 26px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+    }
+
+    .brand-header p {
+      max-width: 52ch;
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .layout {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .login-col {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .login-card {
+      padding: 30px;
+      background: var(--bg-tertiary);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-card);
+      box-shadow: 0 20px 50px var(--shadow-color);
+    }
+
+    .login-title {
+      margin-bottom: 6px;
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      text-align: center;
+    }
+
+    .login-subtitle {
+      margin-bottom: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .field { position: relative; display: flex; flex-direction: column; gap: 6px; }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 16px;
+      padding-right: 52px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-field);
+      color: var(--text-primary);
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    #login { padding-right: 16px; }
+
+    input::placeholder { color: var(--text-muted); }
+
+    input:hover { background: rgba(255, 255, 255, 0.1); }
+
+    input:focus {
+      outline: none;
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(68, 70, 225, 0.22);
+    }
+
+    input[aria-invalid="true"] {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.18);
+    }
+
+    input:-webkit-autofill {
+      -webkit-text-fill-color: var(--text-primary);
+      -webkit-box-shadow: 0 0 0 1000px #131317 inset;
+    }
+
+    .field__error {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    .reveal-btn {
+      position: absolute;
+      right: 6px;
+      bottom: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 10px;
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .reveal-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+    .reveal-btn svg { width: 20px; height: 20px; }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+
+    .check {
       display: inline-flex;
-      margin-bottom: var(--space-6);
+      align-items: center;
+      gap: 9px;
+      color: var(--text-secondary);
+      cursor: pointer;
     }
-  }
 
-  @media (max-width: 420px) {
-    .title { font-size: 23px; }
-    .row { justify-content: flex-start; }
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .session { transition: border-color var(--motion-instant) var(--ease); }
-    .session:hover { border-color: var(--line-strong); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 1ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 1ms !important;
+    .check input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+      accent-color: var(--accent);
+      cursor: pointer;
     }
-    .js .reveal-on-load { opacity: 1; transform: none; }
-  }
-</style>
+
+    .form-row a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .form-row a:hover { color: var(--text-primary); text-decoration: underline; }
+
+    .submit-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin-top: 6px;
+      padding: 16px;
+      border: 0;
+      border-radius: var(--radius-field);
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      color: #ffffff;
+      font: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(68, 70, 225, 0.4);
+    }
+
+    .submit-btn:active { transform: translateY(0); }
+
+    .submit-btn:disabled,
+    .submit-btn[aria-busy="true"] {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .submit-btn__spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    .submit-btn[aria-busy="true"] .submit-btn__spinner { display: block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .alert {
+      min-height: 1.2rem;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--danger);
+    }
+
+    .support-link {
+      display: block;
+      margin-top: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .support-link:hover { color: var(--text-primary); }
+
+    .registration-btn {
+      display: block;
+      margin: 10px auto 0;
+      padding: 6px 2px;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .registration-btn:hover { color: var(--text-secondary); }
+
+    .fastid-ad {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-top: 1.5rem;
+      padding: 16px 18px;
+      background: var(--bg-tertiary);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      box-shadow: 0 12px 30px var(--shadow-color);
+    }
+
+    .fastid-ad__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #4446E1 0%, #2E3192 100%);
+      color: #ffffff;
+    }
+
+    .fastid-ad__icon svg { width: 22px; height: 22px; }
+
+    .fastid-ad__text {
+      min-width: 0;
+      font-size: 0.82rem;
+      font-weight: 500;
+      line-height: 1.45;
+      color: var(--text-secondary);
+    }
+
+    .fastid-ad__text strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+    }
+
+    .side-col { width: 100%; max-width: 560px; }
+
+    .services__head {
+      margin-bottom: 16px;
+    }
+
+    .services__title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      text-align: center;
+    }
+
+    .services__note {
+      margin-top: 4px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .service-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 18px 16px;
+      background: var(--bg-tertiary);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-item);
+      box-shadow: 0 12px 30px var(--shadow-color);
+      text-decoration: none;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .service-item:hover {
+      transform: translateY(-3px);
+      background: var(--bg-hover);
+      border-color: rgba(68, 70, 225, 0.55);
+      text-decoration: none;
+    }
+
+    .service-item__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--accent);
+    }
+
+    .service-item__icon svg { width: 22px; height: 22px; }
+
+    .service-item__label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .service-item__hint {
+      font-size: 0.76rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      overflow-wrap: anywhere;
+    }
+
+    .footer-dit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-top: clamp(28px, 3.4vw, 48px);
+      text-align: center;
+      opacity: 0.75;
+    }
+
+    .footer-dit img { height: 30px; }
+
+    .footer-text {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .js .brand-header,
+    .js .login-col,
+    .js .side-col,
+    .js .footer-dit {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+
+    .js.is-ready .brand-header { animation: fadeInUp 0.55s ease-out 0.05s both; }
+    .js.is-ready .login-col { animation: fadeInUp 0.55s ease-out 0.15s both; }
+    .js.is-ready .side-col { animation: fadeInUp 0.55s ease-out 0.28s both; }
+    .js.is-ready .footer-dit { animation: fadeInUp 0.55s ease-out 0.38s both; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (min-width: 1080px) {
+      .page { padding-inline: 40px; }
+
+      .layout {
+        grid-template-columns: minmax(0, 440px) minmax(0, 1fr);
+        align-items: start;
+        gap: 40px;
+      }
+
+      .login-col {
+        position: sticky;
+        top: clamp(24px, 3vw, 48px);
+        max-width: none;
+      }
+
+      .login-card { padding: 34px; }
+
+      .brand-header img { height: 72px; }
+    }
+
+    @media (min-width: 1400px) {
+      .page { max-width: 1280px; }
+
+      .layout { grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: 56px; }
+
+      .login-card { padding: 38px; }
+
+      .brand-header img { height: 84px; }
+    }
+
+    @media (min-width: 1080px) and (max-height: 820px) {
+      .brand-header { margin-bottom: 20px; }
+      .brand-header img { height: 52px; }
+      .brand-header p { display: none; }
+      .login-card { padding: 26px 30px; }
+      .services-grid { gap: 10px; }
+      .service-item { padding: 14px; }
+      .footer-dit { margin-top: 28px; }
+    }
+
+    @media (max-width: 640px) {
+      .login-card { padding: 24px 20px; }
+      .login-title { font-size: 1.2rem; }
+      .fastid-ad { padding: 14px; }
+    }
+
+    @media (max-width: 360px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .form-row { flex-wrap: wrap; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 1ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<main class="auth">
-  <aside class="auth__aside">
-    <a class="brand" href="/">
-      <span class="brand__mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M4 19V9l8-5 8 5v10"></path>
-          <path d="M9 19v-6h6v6"></path>
-        </svg>
-      </span>
-      STUDY1409
-    </a>
+  <div class="page">
+    <header class="brand-header">
+      <img src="/static/logo.svg" alt="Школа №1409">
+      <h1>STUDY1409</h1>
+      <p>Единый аккаунт ученика: расписание, заявки, мероприятия и сервисы школы.</p>
+    </header>
 
-    <div>
-      <p class="aside__lead">Расписание, дедлайны и зачёты в одном окне.</p>
-      <p class="aside__note">Панель собирает всё по вашей группе: ближайшие пары, сданные работы и текущий рейтинг.</p>
-    </div>
+    <main class="layout">
+      <div class="login-col">
+        <div class="login-card">
+          <h2 class="login-title">Вход в аккаунт</h2>
+          <p class="login-subtitle">Логин и пароль выдаёт классный руководитель</p>
 
-    <div class="session">
-      <p class="session__label">До начала ближайшей пары</p>
-      <p class="session__clock" id="session-clock" aria-live="off">00:47:12</p>
-      <p class="session__title">Анализ данных</p>
-      <ul class="session__meta">
-        <li>Аудитория 4.12</li>
-        <li>14:09</li>
-        <li>Группа 1409</li>
-      </ul>
-    </div>
+          <form class="login-form" id="login-form" method="post" action="#" novalidate>
+            <div class="field">
+              <label class="sr-only" for="login">Логин</label>
+              <input type="text" id="login" name="login" placeholder="Логин"
+                     autocomplete="username" autocapitalize="off" spellcheck="false"
+                     aria-describedby="login-error" required>
+              <span class="field__error" id="login-error" role="alert" hidden></span>
+            </div>
 
-    <p class="aside__foot">Учебный портал кафедры</p>
-  </aside>
+            <div class="field">
+              <label class="sr-only" for="password">Пароль</label>
+              <input type="password" id="password" name="password" placeholder="Пароль"
+                     autocomplete="current-password" aria-describedby="password-error" required>
+              <span class="field__error" id="password-error" role="alert" hidden></span>
+              <button class="reveal-btn" id="reveal-btn" type="button"
+                      aria-pressed="false" aria-controls="password" aria-label="Показать пароль">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
 
-  <section class="auth__panel">
-    <div class="auth__inner">
-      <a class="brand auth__mobileBrand" href="/">
-        <span class="brand__mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 19V9l8-5 8 5v10"></path>
-            <path d="M9 19v-6h6v6"></path>
-          </svg>
-        </span>
-        STUDY1409
-      </a>
+            <div class="form-row">
+              <label class="check" for="remember">
+                <input id="remember" name="remember" type="checkbox" value="1">
+                Запомнить меня
+              </label>
+              <a href="/help">Забыли пароль?</a>
+            </div>
 
-      <h1 class="title">Вход в панель</h1>
-      <p class="subtitle">Введите свои данные для входа в WEB-Приложение</p>
-
-      <form class="form" id="login-form" method="post" action="#" novalidate>
-        <p class="alert" id="form-alert" role="alert" data-visible="false">
-          Не удалось войти. Проверьте почту и пароль и попробуйте ещё раз.
-        </p>
-
-        <div class="field reveal-on-load">
-          <label class="field__label" for="email">Учебная почта</label>
-          <div class="control" id="email-control">
-            <input class="control__input" id="email" name="email" type="email"
-                   placeholder="ivanov@study1409.ru" autocomplete="username"
-                   inputmode="email" spellcheck="false"
-                   aria-describedby="email-error" required>
-          </div>
-          <p class="field__error" id="email-error" data-visible="false">Введите почту в формате ivanov@study1409.ru</p>
-        </div>
-
-        <div class="field reveal-on-load">
-          <label class="field__label" for="password">Пароль</label>
-          <div class="control" id="password-control">
-            <input class="control__input" id="password" name="password" type="password"
-                   placeholder="Не меньше 8 символов" autocomplete="current-password"
-                   aria-describedby="password-error" required>
-            <button class="reveal" id="reveal-toggle" type="button"
-                    aria-pressed="false" aria-controls="password" aria-label="Показать пароль">
-              <svg id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"></path>
-                <circle cx="12" cy="12" r="3"></circle>
-              </svg>
+            <button class="submit-btn" id="submit-btn" type="submit">
+              <span>Войти</span>
+              <span class="submit-btn__spinner" aria-hidden="true"></span>
             </button>
-          </div>
-          <p class="field__error" id="password-error" data-visible="false">Введите пароль</p>
+          </form>
+
+          <p class="alert" id="form-alert" role="alert" aria-live="assertive"></p>
+
+          <a class="support-link" href="/help">Техподдержка</a>
+          <button class="registration-btn" type="button">Как зарегистрироваться?</button>
         </div>
 
-        <div class="row reveal-on-load">
-          <label class="check" for="remember">
-            <input id="remember" name="remember" type="checkbox" value="1">
-            Не выходить из аккаунта
-          </label>
-          <a class="row__link" href="#">Восстановить пароль</a>
+        <div class="fastid-ad">
+          <span class="fastid-ad__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="12" r="4"></circle><path d="M12 12h9m-3 0v3.5M15.5 12v2.5"></path></svg>
+          </span>
+          <p class="fastid-ad__text">
+            <strong>Входите перез паролей и СМС!</strong>
+            Вы можете входить в STUDY1409 без логинов, паролей и СМС. Подключите брелок моментального входа FastID в ИТ-полигоне
+          </p>
+        </div>
+      </div>
+
+      <section class="side-col" aria-labelledby="services-title">
+        <div class="services__head">
+          <h2 class="services__title" id="services-title">Сервисы школы</h2>
+          <p class="services__note">Откроются после входа</p>
         </div>
 
-        <button class="submit reveal-on-load" id="submit" type="submit" data-loading="false">
-          <svg class="submit__spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
-            <path d="M12 3a9 9 0 1 0 9 9" opacity="0.9"></path>
-          </svg>
-          <span id="submit-label">Войти</span>
-          <svg class="submit__arrow" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h13"></path>
-            <path d="m12 5 7 7-7 7"></path>
-          </svg>
-        </button>
+        <div class="services-grid">
+          <a class="service-item" href="/create_exit_application">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"></path><path d="M10 8 6 12l4 4M6 12h9"></path></svg>
+            </span>
+            <span class="service-item__label">Заявки на выход</span>
+            <span class="service-item__hint">Пропуск на территорию</span>
+          </a>
 
-        <p class="divider reveal-on-load">или войти другим способом</p>
+          <a class="service-item" href="/create-lift-application">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="3" width="15" height="18" rx="2.5"></rect><path d="m10 10 2-2 2 2M14 14l-2 2-2-2"></path></svg>
+            </span>
+            <span class="service-item__label">Лифт</span>
+            <span class="service-item__hint">Вызов с этажа</span>
+          </a>
 
-        <button class="sso reveal-on-load" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3 5 6v5c0 4.4 3 8.3 7 9.5 4-1.2 7-5.1 7-9.5V6l-7-3Z"></path>
-            <path d="M9.5 12.2 11.4 14l3.6-3.7"></path>
-          </svg>
-          Единый вход университета
-        </button>
-      </form>
+          <a class="service-item" href="https://event.school1409.ru">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3"></rect><path d="M8 3.5v3M16 3.5v3M3.5 10h17"></path><path d="m9.5 15 1.8 1.8 3.4-3.6"></path></svg>
+            </span>
+            <span class="service-item__label">Мероприятия</span>
+            <span class="service-item__hint">event.school1409.ru</span>
+          </a>
 
-      <p class="auth__legal">Продолжая, вы соглашаетесь с правилами обработки персональных данных.</p>
-    </div>
-  </section>
-</main>
+          <a class="service-item" href="https://info.school1409.ru">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 5 6.5v5.5c0 4.3 2.9 8.1 7 9.3 4.1-1.2 7-5 7-9.3V6.5l-7-3Z"></path><path d="M9.5 12h5M12 9.5v5"></path></svg>
+            </span>
+            <span class="service-item__label">Дума</span>
+            <span class="service-item__hint">info.school1409.ru</span>
+          </a>
 
-<script>
-  const form = document.getElementById('login-form');
-  const email = document.getElementById('email');
-  const password = document.getElementById('password');
-  const emailControl = document.getElementById('email-control');
-  const passwordControl = document.getElementById('password-control');
-  const emailError = document.getElementById('email-error');
-  const passwordError = document.getElementById('password-error');
-  const alertBox = document.getElementById('form-alert');
-  const submit = document.getElementById('submit');
-  const submitLabel = document.getElementById('submit-label');
-  const revealToggle = document.getElementById('reveal-toggle');
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+          <a class="service-item" href="/account">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.75"></circle><path d="M4.5 20c1.3-3.6 4-5.4 7.5-5.4s6.2 1.8 7.5 5.4"></path></svg>
+            </span>
+            <span class="service-item__label">Аккаунт</span>
+            <span class="service-item__hint">Профиль и 1409ID</span>
+          </a>
 
-  const showError = (input, control, message, state) => {
-    const visible = !state;
-    control.classList.toggle('control--invalid', visible);
-    message.dataset.visible = String(visible);
-    input.setAttribute('aria-invalid', String(visible));
-  };
+          <a class="service-item" href="https://t.me/dit1409_bot">
+            <span class="service-item__icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15v-3a8 8 0 0 1 16 0v3"></path><rect x="2.5" y="13" width="4.5" height="6.5" rx="2"></rect><rect x="17" y="13" width="4.5" height="6.5" rx="2"></rect></svg>
+            </span>
+            <span class="service-item__label">Поддержка</span>
+            <span class="service-item__hint">Техподдержка в Telegram</span>
+          </a>
+        </div>
+      </section>
+    </main>
 
-  [email, password].forEach(input => {
-    input.addEventListener('input', () => {
-      if (input.getAttribute('aria-invalid') === 'true') {
-        showError(input,
-          input === email ? emailControl : passwordControl,
-          input === email ? emailError : passwordError,
-          true);
-      }
-      alertBox.dataset.visible = 'false';
-    });
-  });
+    <footer class="footer-dit">
+      <img src="/static/departament-logo.png" alt="">
+      <p class="footer-text">Создано в Школе 1409 при участии учащихся</p>
+    </footer>
+  </div>
 
-  revealToggle.addEventListener('click', () => {
-    const revealed = password.type === 'text';
-    password.type = revealed ? 'password' : 'text';
-    revealToggle.setAttribute('aria-pressed', String(!revealed));
-    revealToggle.setAttribute('aria-label', revealed ? 'Показать пароль' : 'Скрыть пароль');
-    password.focus({ preventScroll: true });
-  });
+  <script>
+    const form = document.getElementById('login-form');
+    const login = document.getElementById('login');
+    const password = document.getElementById('password');
+    const loginError = document.getElementById('login-error');
+    const passwordError = document.getElementById('password-error');
+    const formAlert = document.getElementById('form-alert');
+    const submitBtn = document.getElementById('submit-btn');
+    const revealBtn = document.getElementById('reveal-btn');
 
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-
-    const emailOk = emailPattern.test(email.value.trim());
-    const passwordOk = password.value.length > 0;
-
-    showError(email, emailControl, emailError, emailOk);
-    showError(password, passwordControl, passwordError, passwordOk);
-
-    if (!emailOk || !passwordOk) {
-      (emailOk ? password : email).focus();
-      return;
-    }
-
-    submit.dataset.loading = 'true';
-    submit.setAttribute('aria-busy', 'true');
-    submit.disabled = true;
-    submitLabel.textContent = 'Проверяем данные';
-    email.disabled = true;
-    password.disabled = true;
-  });
-
-  const clock = document.getElementById('session-clock');
-  if (clock) {
-    const target = Date.now() + (47 * 60 + 12) * 1000;
-    const pad = value => String(value).padStart(2, '0');
-    const tick = () => {
-      const left = Math.max(0, target - Date.now());
-      const hours = Math.floor(left / 3600000);
-      const minutes = Math.floor(left % 3600000 / 60000);
-      const seconds = Math.floor(left % 60000 / 1000);
-      clock.textContent = `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    const showError = (input, node, message) => {
+      node.textContent = message || '';
+      node.hidden = !message;
+      input.setAttribute('aria-invalid', message ? 'true' : 'false');
     };
-    tick();
-    setInterval(tick, 1000);
-  }
 
-  requestAnimationFrame(() => document.body.classList.add('is-ready'));
-</script>
+    const clearAlert = () => {
+      formAlert.textContent = '';
+    };
+
+    revealBtn.addEventListener('click', () => {
+      const revealed = password.type === 'text';
+      password.type = revealed ? 'password' : 'text';
+      revealBtn.setAttribute('aria-pressed', String(!revealed));
+      revealBtn.setAttribute('aria-label', revealed ? 'Показать пароль' : 'Скрыть пароль');
+      password.focus({ preventScroll: true });
+    });
+
+    login.addEventListener('input', () => {
+      showError(login, loginError, '');
+      clearAlert();
+    });
+
+    password.addEventListener('input', () => {
+      showError(password, passwordError, '');
+      clearAlert();
+    });
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      clearAlert();
+
+      const loginValue = login.value.trim();
+      const passwordValue = password.value;
+      let firstInvalid = null;
+
+      if (!loginValue) {
+        showError(login, loginError, 'Введите логин');
+        firstInvalid = firstInvalid || login;
+      } else {
+        showError(login, loginError, '');
+      }
+
+      if (!passwordValue) {
+        showError(password, passwordError, 'Введите пароль');
+        firstInvalid = firstInvalid || password;
+      } else {
+        showError(password, passwordError, '');
+      }
+
+      if (firstInvalid) {
+        firstInvalid.focus();
+        return;
+      }
+
+      submitBtn.setAttribute('aria-busy', 'true');
+      submitBtn.disabled = true;
+      login.readOnly = true;
+      password.readOnly = true;
+    });
+
+    requestAnimationFrame(() => document.documentElement.classList.add('is-ready'));
+  </script>
 </body>
 </html>
